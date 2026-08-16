@@ -4,37 +4,39 @@
     "slug": "ArahKita",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/logo-arahkita.png",
+    "icon": "./assets/images/logo-arahkita-white.png",
     "scheme": "arahkita",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/logo-arahkita-black.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#5590FF"
+    },
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/logo-arahkita.png"
+        "backgroundColor": "#5590FF",
+        "foregroundImage": "./assets/images/logo-arahkita-black.png"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/logo-arahkita.png"
+      "favicon": "./assets/images/logo-arahkita-white.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/logo-arahkita.png",
+          "image": "./assets/images/logo-arahkita-white.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff",
-          "dark": {
-            "backgroundColor": "#000000"
-          }
+          "backgroundColor": "#5590FF"
         }
       ]
     ],
