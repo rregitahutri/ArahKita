@@ -8,8 +8,11 @@ import LoginScreen from "@/app/screens/LoginScreen";
 import RegisterEmailScreen from "@/app/screens/RegisterEmailScreen";
 import RegisterPasswordScreen from "@/app/screens/RegisterPasswordScreen";
 import RegisterNameScreen from "@/app/screens/RegisterNameScreen";
+import ForgotPasswordEmailScreen from "@/app/screens/ForgotPasswordEmailScreen";
+import ForgotPasswordOtpScreen from "@/app/screens/ForgotPasswordOtpScreen";
+import ForgotPasswordResetScreen from "@/app/screens/ForgotPasswordResetScreen";
 
-type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7;
+type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 type PreferenceType = "visual" | "hearing";
 
 export default function AppFlow() {
@@ -23,12 +26,21 @@ export default function AppFlow() {
   const [registerFirstName, setRegisterFirstName] = useState("");
   const [registerLastName, setRegisterLastName] = useState("");
 
+  // Forgot Password Draft Data
+  const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
+  const [forgotPasswordOtp, setForgotPasswordOtp] = useState("");
+
   const resetRegisterForm = () => {
     setRegisterEmail("");
     setRegisterPassword("");
     setRegisterConfirmPassword("");
     setRegisterFirstName("");
     setRegisterLastName("");
+  };
+
+  const resetForgotPasswordForm = () => {
+    setForgotPasswordEmail("");
+    setForgotPasswordOtp("");
   };
 
   // Step 1: Splash Screen
@@ -73,10 +85,8 @@ export default function AppFlow() {
           setStep(5);
         }}
         onForgotPassword={() => {
-          Alert.alert(
-            "Lupa Sandi",
-            "Tautan pemulihan kata sandi akan dikirim ke email Anda.",
-          );
+          resetForgotPasswordForm();
+          setStep(8);
         }}
       />
     );
@@ -124,30 +134,74 @@ export default function AppFlow() {
   }
 
   // Step 7: Register Hal 3 (Nama Depan & Nama Belakang)
-  return (
-    <RegisterNameScreen
-      initialFirstName={registerFirstName}
-      initialLastName={registerLastName}
-      onBack={() => setStep(6)}
-      onSubmit={(firstName, lastName) => {
-        setRegisterFirstName(firstName);
-        setRegisterLastName(lastName);
-        Alert.alert(
-          "Pendaftaran Berhasil!",
-          `Selamat datang ${firstName} ${lastName}! Akun dengan email ${registerEmail} berhasil dibuat.`,
-          [
-            {
-              text: "Lanjut ke Login",
-              onPress: () => {
-                resetRegisterForm();
-                setStep(4);
+  if (step === 7) {
+    return (
+      <RegisterNameScreen
+        initialFirstName={registerFirstName}
+        initialLastName={registerLastName}
+        onBack={() => setStep(6)}
+        onSubmit={(firstName, lastName) => {
+          setRegisterFirstName(firstName);
+          setRegisterLastName(lastName);
+          Alert.alert(
+            "Pendaftaran Berhasil!",
+            `Selamat datang ${firstName} ${lastName}! Akun dengan email ${registerEmail} berhasil dibuat.`,
+            [
+              {
+                text: "Lanjut ke Login",
+                onPress: () => {
+                  resetRegisterForm();
+                  setStep(4);
+                },
               },
-            },
-          ],
-        );
-      }}
-      onLogin={() => {
-        resetRegisterForm();
+            ],
+          );
+        }}
+        onLogin={() => {
+          resetRegisterForm();
+          setStep(4);
+        }}
+      />
+    );
+  }
+
+  // Step 8: Forgot Password Hal 1 (Input Email)
+  if (step === 8) {
+    return (
+      <ForgotPasswordEmailScreen
+        initialEmail={forgotPasswordEmail}
+        onBack={() => {
+          resetForgotPasswordForm();
+          setStep(4);
+        }}
+        onNext={(email) => {
+          setForgotPasswordEmail(email);
+          setStep(9);
+        }}
+      />
+    );
+  }
+
+  // Step 9: Forgot Password Hal 2 (Verification Code / OTP)
+  if (step === 9) {
+    return (
+      <ForgotPasswordOtpScreen
+        email={forgotPasswordEmail}
+        onBack={() => setStep(8)}
+        onNext={(otp) => {
+          setForgotPasswordOtp(otp);
+          setStep(10);
+        }}
+      />
+    );
+  }
+
+  // Step 10: Forgot Password Hal 3 (Reset Password & Success Modal Notification)
+  return (
+    <ForgotPasswordResetScreen
+      onBack={() => setStep(9)}
+      onFinish={() => {
+        resetForgotPasswordForm();
         setStep(4);
       }}
     />
