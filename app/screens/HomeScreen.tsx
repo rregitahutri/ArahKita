@@ -84,11 +84,13 @@ const NEARBY_SERVICES: NearbyServiceItem[] = [
 interface HomeScreenProps {
   onNavigateToTab?: (tabName: string) => void;
   onOpenNotification?: () => void;
+  onOpenEmergency?: () => void;
 }
 
 export default function HomeScreen({
   onNavigateToTab,
   onOpenNotification,
+  onOpenEmergency,
 }: HomeScreenProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState<
@@ -118,22 +120,26 @@ export default function HomeScreen({
 
   const handleEmergencyCall = () => {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-    Alert.alert(
-      "Panggil Bantuan Darurat",
-      "Menghubungkan ke layanan darurat terdekat...",
-      [
-        { text: "Batal", style: "cancel" },
-        {
-          text: "Panggil Sekarang",
-          style: "destructive",
-          onPress: () =>
-            Alert.alert(
-              "Menghubungi...",
-              "Layanan darurat sedang merespons lokasi Anda.",
-            ),
-        },
-      ],
-    );
+    if (onOpenEmergency) {
+      onOpenEmergency();
+    } else {
+      Alert.alert(
+        "Panggil Bantuan Darurat",
+        "Menghubungkan ke layanan darurat terdekat...",
+        [
+          { text: "Batal", style: "cancel" },
+          {
+            text: "Panggil Sekarang",
+            style: "destructive",
+            onPress: () =>
+              Alert.alert(
+                "Menghubungi...",
+                "Layanan darurat sedang merespons lokasi Anda.",
+              ),
+          },
+        ],
+      );
+    }
   };
 
   const handleTabPress = (

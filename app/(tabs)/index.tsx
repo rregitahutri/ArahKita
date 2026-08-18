@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 
 import EditProfileScreen from "@/app/screens/EditProfileScreen";
+import EmergencyScreen from "@/app/screens/EmergencyScreen";
 import HomeScreen from "@/app/screens/HomeScreen";
 import NotificationScreen from "@/app/screens/NotificationScreen";
 import ProfileScreen from "@/app/screens/ProfileScreen";
 
-type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14;
+type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15;
 type PreferenceType = "visual" | "hearing";
 
 export default function AppFlow() {
@@ -208,6 +209,7 @@ export default function AppFlow() {
     return (
       <HomeScreen
         onOpenNotification={() => setStep(12)}
+        onOpenEmergency={() => setStep(15)}
         onNavigateToTab={(tab) => {
           if (tab === "profil") {
             setStep(13);
@@ -238,5 +240,10 @@ export default function AppFlow() {
   }
 
   // Step 14: Edit Profile Screen
-  return <EditProfileScreen onBack={() => setStep(13)} />;
+  if (step === 14) {
+    return <EditProfileScreen onBack={() => setStep(13)} />;
+  }
+
+  // Step 15: Emergency Screen
+  return <EmergencyScreen onBack={() => setStep(11)} />;
 }
