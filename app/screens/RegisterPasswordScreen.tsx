@@ -17,35 +17,40 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ThemedText } from "@/components/themed-text";
 import { Fonts, Palette } from "@/constants/theme";
 
-interface LoginScreenProps {
+interface RegisterPasswordScreenProps {
+  initialPassword?: string;
+  initialConfirmPassword?: string;
   onBack: () => void;
-  onRegister?: () => void;
-  onForgotPassword?: () => void;
+  onNext: (password: string, confirmPassword: string) => void;
+  onLogin: () => void;
 }
 
-export default function LoginScreen({
+export default function RegisterPasswordScreen({
+  initialPassword = "",
+  initialConfirmPassword = "",
   onBack,
-  onRegister,
-  onForgotPassword,
-}: LoginScreenProps) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  onNext,
+  onLogin,
+}: RegisterPasswordScreenProps) {
+  const [password, setPassword] = useState(initialPassword);
+  const [confirmPassword, setConfirmPassword] = useState(
+    initialConfirmPassword,
+  );
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isListening, setIsListening] = useState(false);
-  const [emailFocused, setEmailFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
+  const [confirmPasswordFocused, setConfirmPasswordFocused] = useState(false);
 
   // Validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const isEmailEmpty = email.trim().length === 0;
-  const isValidEmail = emailRegex.test(email.trim());
-  const isEmailInvalid = !isEmailEmpty && !isValidEmail;
+  const isPasswordTooShort = password.length > 0 && password.length < 6;
+  const isConfirmPasswordMismatch =
+    confirmPassword.length > 0 && password !== confirmPassword;
 
-  const isPasswordEmpty = password.length === 0;
-  const isValidPassword = password.length >= 6;
-  const isPasswordInvalid = !isPasswordEmpty && !isValidPassword;
-
-  const isFormValid = isValidEmail && isValidPassword;
+  const isValidForm =
+    password.length >= 6 &&
+    confirmPassword.length >= 6 &&
+    password === confirmPassword;
 
   const handleMicPress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -57,41 +62,25 @@ export default function LoginScreen({
     onBack();
   };
 
-  const handleLogin = () => {
-    if (!isFormValid) return;
+  const handleNextPress = () => {
+    if (!isValidForm) return;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    Alert.alert("Sukses", `Login berhasil dengan email: ${email}`);
+    onNext(password, confirmPassword);
   };
 
-  const handleGoogleLogin = () => {
+  const handleGoogleRegister = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    Alert.alert("Google Sign-In", "Melanjutkan dengan akun Google...");
+    Alert.alert("Google Sign-In", "Mendaftar dengan akun Google...");
   };
 
-  const handleFacebookLogin = () => {
+  const handleFacebookRegister = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    Alert.alert("Facebook Sign-In", "Melanjutkan dengan akun Facebook...");
+    Alert.alert("Facebook Sign-In", "Mendaftar dengan akun Facebook...");
   };
 
-  const handleForgotPasswordPress = () => {
+  const handleLoginPress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    if (onForgotPassword) {
-      onForgotPassword();
-    } else {
-      Alert.alert(
-        "Lupa Sandi",
-        "Tautan pemulihan kata sandi akan dikirim ke email Anda.",
-      );
-    }
-  };
-
-  const handleRegisterPress = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    if (onRegister) {
-      onRegister();
-    } else {
-      Alert.alert("Daftar", "Membuka formulir pendaftaran akun baru...");
-    }
+    onLogin();
   };
 
   return (
@@ -119,7 +108,7 @@ export default function LoginScreen({
               />
             </TouchableOpacity>
 
-            <ThemedText style={styles.screenTitle}>Masuk</ThemedText>
+            <ThemedText style={styles.screenTitle}>Daftar</ThemedText>
 
             <View style={styles.headerSpacer} />
           </View>
@@ -144,7 +133,7 @@ export default function LoginScreen({
               />
             </View>
 
-            {/* Glowing Microphone Button */}
+            {/* Microphone Button */}
             <TouchableOpacity
               style={[
                 styles.micWrapper,
@@ -161,79 +150,29 @@ export default function LoginScreen({
             </TouchableOpacity>
           </View>
 
-          {/* Form Fields */}
+          {/* Form Section */}
           <View style={styles.formContainer}>
-            {/* Email Field */}
-            <View style={styles.inputGroup}>
-              <ThemedText style={styles.label}>Email</ThemedText>
-              <View
-                style={[
-                  styles.inputWrapper,
-                  emailFocused && styles.inputWrapperFocused,
-                  isEmailInvalid && styles.inputWrapperError,
-                ]}
-              >
-                <View
-                  style={[
-                    styles.iconBadge,
-                    isEmailInvalid && styles.iconBadgeError,
-                  ]}
-                >
-                  <Ionicons
-                    name="mail-outline"
-                    size={18}
-                    color={
-                      isEmailInvalid
-                        ? Palette.brand.danger
-                        : emailFocused
-                          ? Palette.blue[500]
-                          : Palette.blue[400]
-                    }
-                  />
-                </View>
-                <TextInput
-                  style={styles.textInput}
-                  placeholder="Masukkan Emailmu"
-                  placeholderTextColor={Palette.text.inactive}
-                  value={email}
-                  onChangeText={setEmail}
-                  onFocus={() => setEmailFocused(true)}
-                  onBlur={() => setEmailFocused(false)}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                />
-              </View>
-
-              {/* Email Warning */}
-              {isEmailInvalid && (
-                <ThemedText style={styles.errorText}>
-                  Format email harus sesuai (contoh: email@example.com)
-                </ThemedText>
-              )}
-            </View>
-
             {/* Password Field */}
             <View style={styles.inputGroup}>
-              <ThemedText style={styles.label}>Kata Sandi</ThemedText>
+              <ThemedText style={styles.label}>Kata sandi</ThemedText>
               <View
                 style={[
                   styles.inputWrapper,
                   passwordFocused && styles.inputWrapperFocused,
-                  isPasswordInvalid && styles.inputWrapperError,
+                  isPasswordTooShort && styles.inputWrapperError,
                 ]}
               >
                 <View
                   style={[
                     styles.iconBadge,
-                    isPasswordInvalid && styles.iconBadgeError,
+                    isPasswordTooShort && styles.iconBadgeError,
                   ]}
                 >
                   <Ionicons
                     name="lock-closed-outline"
                     size={18}
                     color={
-                      isPasswordInvalid
+                      isPasswordTooShort
                         ? Palette.brand.danger
                         : passwordFocused
                           ? Palette.blue[500]
@@ -243,7 +182,7 @@ export default function LoginScreen({
                 </View>
                 <TextInput
                   style={styles.textInput}
-                  placeholder="Masukkan kata sandimu"
+                  placeholder="Buat kata sandimu"
                   placeholderTextColor={Palette.text.inactive}
                   value={password}
                   onChangeText={setPassword}
@@ -270,45 +209,104 @@ export default function LoginScreen({
               </View>
 
               {/* Password Warning */}
-              {isPasswordInvalid && (
+              {isPasswordTooShort && (
                 <ThemedText style={styles.errorText}>
                   Kata sandi minimal 6 karakter
                 </ThemedText>
               )}
             </View>
 
-            {/* Forgot Password Link */}
-            <TouchableOpacity
-              style={styles.forgotPasswordContainer}
-              onPress={handleForgotPasswordPress}
-              activeOpacity={0.7}
-            >
-              <ThemedText style={styles.forgotPasswordText}>
-                Lupa sandi?
+            {/* Confirm Password Field */}
+            <View style={styles.inputGroup}>
+              <ThemedText style={styles.label}>
+                Konfirmasi kata sandi
               </ThemedText>
-            </TouchableOpacity>
+              <View
+                style={[
+                  styles.inputWrapper,
+                  confirmPasswordFocused && styles.inputWrapperFocused,
+                  isConfirmPasswordMismatch && styles.inputWrapperError,
+                ]}
+              >
+                <View
+                  style={[
+                    styles.iconBadge,
+                    isConfirmPasswordMismatch && styles.iconBadgeError,
+                  ]}
+                >
+                  <Ionicons
+                    name="lock-closed-outline"
+                    size={18}
+                    color={
+                      isConfirmPasswordMismatch
+                        ? Palette.brand.danger
+                        : confirmPasswordFocused
+                          ? Palette.blue[500]
+                          : Palette.blue[400]
+                    }
+                  />
+                </View>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="Konfirmasi kata sandimu"
+                  placeholderTextColor={Palette.text.inactive}
+                  value={confirmPassword}
+                  onChangeText={setConfirmPassword}
+                  onFocus={() => setConfirmPasswordFocused(true)}
+                  onBlur={() => setConfirmPasswordFocused(false)}
+                  secureTextEntry={!showConfirmPassword}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
+                <TouchableOpacity
+                  style={styles.eyeButton}
+                  onPress={() => {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                    setShowConfirmPassword((prev) => !prev);
+                  }}
+                  activeOpacity={0.7}
+                >
+                  <Ionicons
+                    name={
+                      showConfirmPassword ? "eye-outline" : "eye-off-outline"
+                    }
+                    size={19}
+                    color={Palette.text.inactive}
+                  />
+                </TouchableOpacity>
+              </View>
 
-            {/* Login Button (Disabled when form is invalid/incomplete) */}
+              {/* Confirm Password Warning */}
+              {isConfirmPasswordMismatch && (
+                <ThemedText style={styles.errorText}>
+                  Konfirmasi kata sandi tidak cocok
+                </ThemedText>
+              )}
+            </View>
+
+            {/* Next Button (Disabled when form is invalid/incomplete) */}
             <TouchableOpacity
               style={[
                 styles.primaryButton,
                 {
-                  backgroundColor: isFormValid
+                  backgroundColor: isValidForm
                     ? Palette.button.primary
                     : Palette.button.second,
                 },
               ]}
-              disabled={!isFormValid}
-              onPress={handleLogin}
-              activeOpacity={isFormValid ? 0.85 : 1}
+              disabled={!isValidForm}
+              onPress={handleNextPress}
+              activeOpacity={isValidForm ? 0.85 : 1}
             >
-              <ThemedText style={styles.primaryButtonText}>Login</ThemedText>
+              <ThemedText style={styles.primaryButtonText}>
+                Selanjutnya
+              </ThemedText>
             </TouchableOpacity>
 
-            {/* Google Sign-In Button */}
+            {/* Google Register Button */}
             <TouchableOpacity
               style={styles.googleButton}
-              onPress={handleGoogleLogin}
+              onPress={handleGoogleRegister}
               activeOpacity={0.85}
             >
               <Ionicons
@@ -318,14 +316,14 @@ export default function LoginScreen({
                 style={styles.btnIcon}
               />
               <ThemedText style={styles.socialButtonText}>
-                Lanjutkan dengan Google
+                Daftar dengan Google
               </ThemedText>
             </TouchableOpacity>
 
-            {/* Facebook Sign-In Button */}
+            {/* Facebook Register Button */}
             <TouchableOpacity
               style={styles.facebookButton}
-              onPress={handleFacebookLogin}
+              onPress={handleFacebookRegister}
               activeOpacity={0.85}
             >
               <Ionicons
@@ -335,20 +333,17 @@ export default function LoginScreen({
                 style={styles.btnIcon}
               />
               <ThemedText style={styles.socialButtonText}>
-                Lanjutkan dengan Facebook
+                Daftar dengan Facebook
               </ThemedText>
             </TouchableOpacity>
 
-            {/* Footer Registration Link */}
+            {/* Footer Login Link */}
             <View style={styles.footer}>
               <ThemedText style={styles.footerNormalText}>
-                Belum punya akun?{" "}
+                Sudah punya akun?{" "}
               </ThemedText>
-              <TouchableOpacity
-                onPress={handleRegisterPress}
-                activeOpacity={0.7}
-              >
-                <ThemedText style={styles.footerLinkText}>Daftar</ThemedText>
+              <TouchableOpacity onPress={handleLoginPress} activeOpacity={0.7}>
+                <ThemedText style={styles.footerLinkText}>Masuk</ThemedText>
               </TouchableOpacity>
             </View>
           </View>
@@ -529,22 +524,12 @@ const styles = StyleSheet.create({
     marginTop: 6,
     marginLeft: 4,
   },
-  forgotPasswordContainer: {
-    alignSelf: "flex-end",
-    marginBottom: 20,
-    marginTop: -4,
-  },
-  forgotPasswordText: {
-    fontFamily: Fonts.medium,
-    fontSize: 13,
-    fontWeight: "500",
-    color: Palette.brand.danger,
-  },
   primaryButton: {
     height: 50,
     borderRadius: 25,
     alignItems: "center",
     justifyContent: "center",
+    marginTop: 8,
     marginBottom: 12,
     shadowColor: Palette.blue[500],
     shadowOffset: { width: 0, height: 4 },

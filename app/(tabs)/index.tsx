@@ -1,21 +1,42 @@
 import React, { useState } from "react";
+import { Alert } from "react-native";
 
 import SplashScreen from "@/app/screens/SplashScreen";
 import DisabilitySelectionScreen from "@/app/screens/DisabilitySelectionScreen";
 import AccountOptionScreen from "@/app/screens/AccountOptionScreen";
 import LoginScreen from "@/app/screens/LoginScreen";
+import RegisterEmailScreen from "@/app/screens/RegisterEmailScreen";
+import RegisterPasswordScreen from "@/app/screens/RegisterPasswordScreen";
+import RegisterNameScreen from "@/app/screens/RegisterNameScreen";
 
-type Step = 1 | 2 | 3 | 4;
+type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 type PreferenceType = "visual" | "hearing";
 
-export default function OnboardingFlow() {
+export default function AppFlow() {
   const [step, setStep] = useState<Step>(1);
   const [preference, setPreference] = useState<PreferenceType>("visual");
 
+  // Registration Draft Data
+  const [registerEmail, setRegisterEmail] = useState("");
+  const [registerPassword, setRegisterPassword] = useState("");
+  const [registerConfirmPassword, setRegisterConfirmPassword] = useState("");
+  const [registerFirstName, setRegisterFirstName] = useState("");
+  const [registerLastName, setRegisterLastName] = useState("");
+
+  const resetRegisterForm = () => {
+    setRegisterEmail("");
+    setRegisterPassword("");
+    setRegisterConfirmPassword("");
+    setRegisterFirstName("");
+    setRegisterLastName("");
+  };
+
+  // Step 1: Splash Screen
   if (step === 1) {
     return <SplashScreen onFinish={() => setStep(2)} />;
   }
 
+  // Step 2: Disability Selection
   if (step === 2) {
     return (
       <DisabilitySelectionScreen
@@ -27,22 +48,108 @@ export default function OnboardingFlow() {
     );
   }
 
+  // Step 3: Account Choice (Daftar / Masuk)
   if (step === 3) {
     return (
       <AccountOptionScreen
         preference={preference}
         onBack={() => setStep(2)}
-        onRegister={() => {}}
+        onRegister={() => {
+          resetRegisterForm();
+          setStep(5);
+        }}
         onLogin={() => setStep(4)}
       />
     );
   }
 
+  // Step 4: Login Screen
+  if (step === 4) {
+    return (
+      <LoginScreen
+        onBack={() => setStep(3)}
+        onRegister={() => {
+          resetRegisterForm();
+          setStep(5);
+        }}
+        onForgotPassword={() => {
+          Alert.alert(
+            "Lupa Sandi",
+            "Tautan pemulihan kata sandi akan dikirim ke email Anda.",
+          );
+        }}
+      />
+    );
+  }
+
+  // Step 5: Register Hal 1 (Email)
+  if (step === 5) {
+    return (
+      <RegisterEmailScreen
+        initialEmail={registerEmail}
+        onBack={() => {
+          resetRegisterForm();
+          setStep(3);
+        }}
+        onNext={(email) => {
+          setRegisterEmail(email);
+          setStep(6);
+        }}
+        onLogin={() => {
+          resetRegisterForm();
+          setStep(4);
+        }}
+      />
+    );
+  }
+
+  // Step 6: Register Hal 2 (Password & Confirm Password)
+  if (step === 6) {
+    return (
+      <RegisterPasswordScreen
+        initialPassword={registerPassword}
+        initialConfirmPassword={registerConfirmPassword}
+        onBack={() => setStep(5)}
+        onNext={(password, confirmPassword) => {
+          setRegisterPassword(password);
+          setRegisterConfirmPassword(confirmPassword);
+          setStep(7);
+        }}
+        onLogin={() => {
+          resetRegisterForm();
+          setStep(4);
+        }}
+      />
+    );
+  }
+
+  // Step 7: Register Hal 3 (Nama Depan & Nama Belakang)
   return (
-    <LoginScreen
-      onBack={() => setStep(3)}
-      onRegister={() => {}}
-      onForgotPassword={() => {}}
+    <RegisterNameScreen
+      initialFirstName={registerFirstName}
+      initialLastName={registerLastName}
+      onBack={() => setStep(6)}
+      onSubmit={(firstName, lastName) => {
+        setRegisterFirstName(firstName);
+        setRegisterLastName(lastName);
+        Alert.alert(
+          "Pendaftaran Berhasil!",
+          `Selamat datang ${firstName} ${lastName}! Akun dengan email ${registerEmail} berhasil dibuat.`,
+          [
+            {
+              text: "Lanjut ke Login",
+              onPress: () => {
+                resetRegisterForm();
+                setStep(4);
+              },
+            },
+          ],
+        );
+      }}
+      onLogin={() => {
+        resetRegisterForm();
+        setStep(4);
+      }}
     />
   );
 }

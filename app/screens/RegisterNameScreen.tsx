@@ -17,35 +17,31 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ThemedText } from "@/components/themed-text";
 import { Fonts, Palette } from "@/constants/theme";
 
-interface LoginScreenProps {
+interface RegisterNameScreenProps {
+  initialFirstName?: string;
+  initialLastName?: string;
   onBack: () => void;
-  onRegister?: () => void;
-  onForgotPassword?: () => void;
+  onSubmit: (firstName: string, lastName: string) => void;
+  onLogin: () => void;
 }
 
-export default function LoginScreen({
+export default function RegisterNameScreen({
+  initialFirstName = "",
+  initialLastName = "",
   onBack,
-  onRegister,
-  onForgotPassword,
-}: LoginScreenProps) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  onSubmit,
+  onLogin,
+}: RegisterNameScreenProps) {
+  const [firstName, setFirstName] = useState(initialFirstName);
+  const [lastName, setLastName] = useState(initialLastName);
   const [isListening, setIsListening] = useState(false);
-  const [emailFocused, setEmailFocused] = useState(false);
-  const [passwordFocused, setPasswordFocused] = useState(false);
+  const [firstNameFocused, setFirstNameFocused] = useState(false);
+  const [lastNameFocused, setLastNameFocused] = useState(false);
 
-  // Validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const isEmailEmpty = email.trim().length === 0;
-  const isValidEmail = emailRegex.test(email.trim());
-  const isEmailInvalid = !isEmailEmpty && !isValidEmail;
+  const isFirstNameEmpty = firstName.trim().length === 0;
+  const isLastNameEmpty = lastName.trim().length === 0;
 
-  const isPasswordEmpty = password.length === 0;
-  const isValidPassword = password.length >= 6;
-  const isPasswordInvalid = !isPasswordEmpty && !isValidPassword;
-
-  const isFormValid = isValidEmail && isValidPassword;
+  const isValidForm = !isFirstNameEmpty && !isLastNameEmpty;
 
   const handleMicPress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -57,41 +53,25 @@ export default function LoginScreen({
     onBack();
   };
 
-  const handleLogin = () => {
-    if (!isFormValid) return;
+  const handleSubmitPress = () => {
+    if (!isValidForm) return;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    Alert.alert("Sukses", `Login berhasil dengan email: ${email}`);
+    onSubmit(firstName.trim(), lastName.trim());
   };
 
-  const handleGoogleLogin = () => {
+  const handleGoogleRegister = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    Alert.alert("Google Sign-In", "Melanjutkan dengan akun Google...");
+    Alert.alert("Google Sign-In", "Mendaftar dengan akun Google...");
   };
 
-  const handleFacebookLogin = () => {
+  const handleFacebookRegister = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    Alert.alert("Facebook Sign-In", "Melanjutkan dengan akun Facebook...");
+    Alert.alert("Facebook Sign-In", "Mendaftar dengan akun Facebook...");
   };
 
-  const handleForgotPasswordPress = () => {
+  const handleLoginPress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    if (onForgotPassword) {
-      onForgotPassword();
-    } else {
-      Alert.alert(
-        "Lupa Sandi",
-        "Tautan pemulihan kata sandi akan dikirim ke email Anda.",
-      );
-    }
-  };
-
-  const handleRegisterPress = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    if (onRegister) {
-      onRegister();
-    } else {
-      Alert.alert("Daftar", "Membuka formulir pendaftaran akun baru...");
-    }
+    onLogin();
   };
 
   return (
@@ -119,7 +99,7 @@ export default function LoginScreen({
               />
             </TouchableOpacity>
 
-            <ThemedText style={styles.screenTitle}>Masuk</ThemedText>
+            <ThemedText style={styles.screenTitle}>Daftar</ThemedText>
 
             <View style={styles.headerSpacer} />
           </View>
@@ -144,7 +124,7 @@ export default function LoginScreen({
               />
             </View>
 
-            {/* Glowing Microphone Button */}
+            {/* Microphone Button */}
             <TouchableOpacity
               style={[
                 styles.micWrapper,
@@ -161,154 +141,93 @@ export default function LoginScreen({
             </TouchableOpacity>
           </View>
 
-          {/* Form Fields */}
+          {/* Form Section */}
           <View style={styles.formContainer}>
-            {/* Email Field */}
+            {/* First Name Field */}
             <View style={styles.inputGroup}>
-              <ThemedText style={styles.label}>Email</ThemedText>
+              <ThemedText style={styles.label}>Nama Depan</ThemedText>
               <View
                 style={[
                   styles.inputWrapper,
-                  emailFocused && styles.inputWrapperFocused,
-                  isEmailInvalid && styles.inputWrapperError,
+                  firstNameFocused && styles.inputWrapperFocused,
                 ]}
               >
-                <View
-                  style={[
-                    styles.iconBadge,
-                    isEmailInvalid && styles.iconBadgeError,
-                  ]}
-                >
+                <View style={styles.iconBadge}>
                   <Ionicons
-                    name="mail-outline"
+                    name="person-outline"
                     size={18}
                     color={
-                      isEmailInvalid
-                        ? Palette.brand.danger
-                        : emailFocused
-                          ? Palette.blue[500]
-                          : Palette.blue[400]
+                      firstNameFocused ? Palette.blue[500] : Palette.blue[400]
                     }
                   />
                 </View>
                 <TextInput
                   style={styles.textInput}
-                  placeholder="Masukkan Emailmu"
+                  placeholder="Masukkan nama depan"
                   placeholderTextColor={Palette.text.inactive}
-                  value={email}
-                  onChangeText={setEmail}
-                  onFocus={() => setEmailFocused(true)}
-                  onBlur={() => setEmailFocused(false)}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
+                  value={firstName}
+                  onChangeText={setFirstName}
+                  onFocus={() => setFirstNameFocused(true)}
+                  onBlur={() => setFirstNameFocused(false)}
+                  autoCapitalize="words"
                   autoCorrect={false}
                 />
               </View>
-
-              {/* Email Warning */}
-              {isEmailInvalid && (
-                <ThemedText style={styles.errorText}>
-                  Format email harus sesuai (contoh: email@example.com)
-                </ThemedText>
-              )}
             </View>
 
-            {/* Password Field */}
+            {/* Last Name Field */}
             <View style={styles.inputGroup}>
-              <ThemedText style={styles.label}>Kata Sandi</ThemedText>
+              <ThemedText style={styles.label}>Nama Belakang</ThemedText>
               <View
                 style={[
                   styles.inputWrapper,
-                  passwordFocused && styles.inputWrapperFocused,
-                  isPasswordInvalid && styles.inputWrapperError,
+                  lastNameFocused && styles.inputWrapperFocused,
                 ]}
               >
-                <View
-                  style={[
-                    styles.iconBadge,
-                    isPasswordInvalid && styles.iconBadgeError,
-                  ]}
-                >
+                <View style={styles.iconBadge}>
                   <Ionicons
-                    name="lock-closed-outline"
+                    name="person-outline"
                     size={18}
                     color={
-                      isPasswordInvalid
-                        ? Palette.brand.danger
-                        : passwordFocused
-                          ? Palette.blue[500]
-                          : Palette.blue[400]
+                      lastNameFocused ? Palette.blue[500] : Palette.blue[400]
                     }
                   />
                 </View>
                 <TextInput
                   style={styles.textInput}
-                  placeholder="Masukkan kata sandimu"
+                  placeholder="Masukkan nama belakang"
                   placeholderTextColor={Palette.text.inactive}
-                  value={password}
-                  onChangeText={setPassword}
-                  onFocus={() => setPasswordFocused(true)}
-                  onBlur={() => setPasswordFocused(false)}
-                  secureTextEntry={!showPassword}
-                  autoCapitalize="none"
+                  value={lastName}
+                  onChangeText={setLastName}
+                  onFocus={() => setLastNameFocused(true)}
+                  onBlur={() => setLastNameFocused(false)}
+                  autoCapitalize="words"
                   autoCorrect={false}
                 />
-                <TouchableOpacity
-                  style={styles.eyeButton}
-                  onPress={() => {
-                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                    setShowPassword((prev) => !prev);
-                  }}
-                  activeOpacity={0.7}
-                >
-                  <Ionicons
-                    name={showPassword ? "eye-outline" : "eye-off-outline"}
-                    size={19}
-                    color={Palette.text.inactive}
-                  />
-                </TouchableOpacity>
               </View>
-
-              {/* Password Warning */}
-              {isPasswordInvalid && (
-                <ThemedText style={styles.errorText}>
-                  Kata sandi minimal 6 karakter
-                </ThemedText>
-              )}
             </View>
 
-            {/* Forgot Password Link */}
-            <TouchableOpacity
-              style={styles.forgotPasswordContainer}
-              onPress={handleForgotPasswordPress}
-              activeOpacity={0.7}
-            >
-              <ThemedText style={styles.forgotPasswordText}>
-                Lupa sandi?
-              </ThemedText>
-            </TouchableOpacity>
-
-            {/* Login Button (Disabled when form is invalid/incomplete) */}
+            {/* Final Register Button (Disabled when form is invalid/incomplete) */}
             <TouchableOpacity
               style={[
                 styles.primaryButton,
                 {
-                  backgroundColor: isFormValid
+                  backgroundColor: isValidForm
                     ? Palette.button.primary
                     : Palette.button.second,
                 },
               ]}
-              disabled={!isFormValid}
-              onPress={handleLogin}
-              activeOpacity={isFormValid ? 0.85 : 1}
+              disabled={!isValidForm}
+              onPress={handleSubmitPress}
+              activeOpacity={isValidForm ? 0.85 : 1}
             >
-              <ThemedText style={styles.primaryButtonText}>Login</ThemedText>
+              <ThemedText style={styles.primaryButtonText}>Daftar</ThemedText>
             </TouchableOpacity>
 
-            {/* Google Sign-In Button */}
+            {/* Google Register Button */}
             <TouchableOpacity
               style={styles.googleButton}
-              onPress={handleGoogleLogin}
+              onPress={handleGoogleRegister}
               activeOpacity={0.85}
             >
               <Ionicons
@@ -318,14 +237,14 @@ export default function LoginScreen({
                 style={styles.btnIcon}
               />
               <ThemedText style={styles.socialButtonText}>
-                Lanjutkan dengan Google
+                Daftar dengan Google
               </ThemedText>
             </TouchableOpacity>
 
-            {/* Facebook Sign-In Button */}
+            {/* Facebook Register Button */}
             <TouchableOpacity
               style={styles.facebookButton}
-              onPress={handleFacebookLogin}
+              onPress={handleFacebookRegister}
               activeOpacity={0.85}
             >
               <Ionicons
@@ -335,20 +254,17 @@ export default function LoginScreen({
                 style={styles.btnIcon}
               />
               <ThemedText style={styles.socialButtonText}>
-                Lanjutkan dengan Facebook
+                Daftar dengan Facebook
               </ThemedText>
             </TouchableOpacity>
 
-            {/* Footer Registration Link */}
+            {/* Footer Login Link */}
             <View style={styles.footer}>
               <ThemedText style={styles.footerNormalText}>
-                Belum punya akun?{" "}
+                Sudah punya akun?{" "}
               </ThemedText>
-              <TouchableOpacity
-                onPress={handleRegisterPress}
-                activeOpacity={0.7}
-              >
-                <ThemedText style={styles.footerLinkText}>Daftar</ThemedText>
+              <TouchableOpacity onPress={handleLoginPress} activeOpacity={0.7}>
+                <ThemedText style={styles.footerLinkText}>Masuk</ThemedText>
               </TouchableOpacity>
             </View>
           </View>
@@ -519,9 +435,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: Palette.text.active,
   },
-  eyeButton: {
-    padding: 6,
-  },
   errorText: {
     fontFamily: Fonts.regular,
     fontSize: 12,
@@ -529,22 +442,12 @@ const styles = StyleSheet.create({
     marginTop: 6,
     marginLeft: 4,
   },
-  forgotPasswordContainer: {
-    alignSelf: "flex-end",
-    marginBottom: 20,
-    marginTop: -4,
-  },
-  forgotPasswordText: {
-    fontFamily: Fonts.medium,
-    fontSize: 13,
-    fontWeight: "500",
-    color: Palette.brand.danger,
-  },
   primaryButton: {
     height: 50,
     borderRadius: 25,
     alignItems: "center",
     justifyContent: "center",
+    marginTop: 8,
     marginBottom: 12,
     shadowColor: Palette.blue[500],
     shadowOffset: { width: 0, height: 4 },
