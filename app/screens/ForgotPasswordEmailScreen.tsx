@@ -2,15 +2,15 @@ import { Ionicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import React, { useState } from "react";
 import {
-  Alert,
   Image,
+  ImageBackground,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -55,154 +55,164 @@ export default function ForgotPasswordEmailScreen({
   };
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={["top", "left", "right"]}>
-      <KeyboardAvoidingView
-        style={styles.keyboardView}
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-      >
-        <ScrollView
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
+    <ImageBackground
+      source={require("@/assets/images/bg-forgot-password.png")}
+      style={styles.bgImage}
+      resizeMode="cover"
+    >
+      <SafeAreaView style={styles.safeArea} edges={["top", "left", "right"]}>
+        <KeyboardAvoidingView
+          style={styles.keyboardView}
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
         >
-          {/* Header Bar */}
-          <View style={styles.navHeader}>
-            <TouchableOpacity
-              style={styles.backButton}
-              activeOpacity={0.7}
-              onPress={handleBackPress}
-            >
-              <Ionicons
-                name="chevron-back"
-                size={22}
-                color={Palette.text.active}
-              />
-            </TouchableOpacity>
-
-            <ThemedText style={styles.screenTitle}>Lupa Sandi</ThemedText>
-
-            <View style={styles.headerSpacer} />
-          </View>
-
-          {/* AI Voice Assistant Card */}
-          <View style={styles.assistantCard}>
-            <View style={styles.greetingBox}>
-              <ThemedText style={styles.greetingTitle}>
-                Tidak bisa mengakses akun?🤝
-              </ThemedText>
-              <ThemedText style={styles.greetingSubtitle}>
-                Masukkan alamat email yang terdaftar, kami akan mengirimkan
-                kode untuk mereset kata sandi Anda.
-              </ThemedText>
-            </View>
-
-            {/* Voice Waveform */}
-            <View style={styles.waveContainer}>
-              <Image
-                source={require("@/assets/icons/ic-onboarding-voice.png")}
-                style={styles.waveformImage}
-                resizeMode="contain"
-              />
-            </View>
-
-            {/* Microphone Button */}
-            <TouchableOpacity
-              style={[
-                styles.micWrapper,
-                isListening && styles.micWrapperActive,
-              ]}
-              activeOpacity={0.8}
-              onPress={handleMicPress}
-            >
-              <Image
-                source={require("@/assets/icons/ic-onboarding-mic.png")}
-                style={styles.micImage}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-          </View>
-
-          {/* Form Section */}
-          <View style={styles.formContainer}>
-            {/* Email Field */}
-            <View style={styles.inputGroup}>
-              <ThemedText style={styles.label}>Email</ThemedText>
-              <View
-                style={[
-                  styles.inputWrapper,
-                  emailFocused && styles.inputWrapperFocused,
-                  isEmailInvalid && styles.inputWrapperError,
-                ]}
+          <ScrollView
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+          >
+            {/* Header Bar */}
+            <View style={styles.navHeader}>
+              <TouchableOpacity
+                style={styles.backButton}
+                activeOpacity={0.7}
+                onPress={handleBackPress}
               >
-                <View
-                  style={[
-                    styles.iconBadge,
-                    isEmailInvalid && styles.iconBadgeError,
-                  ]}
-                >
-                  <Ionicons
-                    name="mail-outline"
-                    size={18}
-                    color={
-                      isEmailInvalid
-                        ? Palette.brand.danger
-                        : emailFocused
-                          ? Palette.blue[500]
-                          : Palette.blue[400]
-                    }
-                  />
-                </View>
-                <TextInput
-                  style={styles.textInput}
-                  placeholder="Masukkan Emailmu"
-                  placeholderTextColor={Palette.text.inactive}
-                  value={email}
-                  onChangeText={setEmail}
-                  onFocus={() => setEmailFocused(true)}
-                  onBlur={() => setEmailFocused(false)}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  autoCorrect={false}
+                <Ionicons
+                  name="chevron-back"
+                  size={22}
+                  color={Palette.text.active}
+                />
+              </TouchableOpacity>
+
+              <ThemedText style={styles.screenTitle}>Lupa Sandi</ThemedText>
+
+              <View style={styles.headerSpacer} />
+            </View>
+
+            {/* AI Voice Assistant Card */}
+            <View style={styles.assistantCard}>
+              <View style={styles.greetingBox}>
+                <ThemedText style={styles.greetingTitle}>
+                  Tidak bisa mengakses akun?🤝
+                </ThemedText>
+                <ThemedText style={styles.greetingSubtitle}>
+                  Masukkan alamat email yang terdaftar, kami akan mengirimkan
+                  kode untuk mereset kata sandi Anda.
+                </ThemedText>
+              </View>
+
+              {/* Voice Waveform */}
+              <View style={styles.waveContainer}>
+                <Image
+                  source={require("@/assets/icons/ic-onboarding-voice.png")}
+                  style={styles.waveformImage}
+                  resizeMode="contain"
                 />
               </View>
 
-              {/* Email Warning */}
-              {isEmailInvalid && (
-                <ThemedText style={styles.errorText}>
-                  Format email harus sesuai (contoh: email@example.com)
-                </ThemedText>
-              )}
+              {/* Microphone Button */}
+              <TouchableOpacity
+                style={[
+                  styles.micWrapper,
+                  isListening && styles.micWrapperActive,
+                ]}
+                activeOpacity={0.8}
+                onPress={handleMicPress}
+              >
+                <Image
+                  source={require("@/assets/icons/ic-onboarding-mic.png")}
+                  style={styles.micImage}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
             </View>
 
-            {/* Next Button */}
-            <TouchableOpacity
-              style={[
-                styles.primaryButton,
-                {
-                  backgroundColor: isValidEmail
-                    ? Palette.button.primary
-                    : Palette.button.second,
-                },
-              ]}
-              disabled={!isValidEmail}
-              onPress={handleNextPress}
-              activeOpacity={isValidEmail ? 0.85 : 1}
-            >
-              <ThemedText style={styles.primaryButtonText}>
-                Selanjutnya
-              </ThemedText>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+            {/* Form Section */}
+            <View style={styles.formContainer}>
+              {/* Email Field */}
+              <View style={styles.inputGroup}>
+                <ThemedText style={styles.label}>Email</ThemedText>
+                <View
+                  style={[
+                    styles.inputWrapper,
+                    emailFocused && styles.inputWrapperFocused,
+                    isEmailInvalid && styles.inputWrapperError,
+                  ]}
+                >
+                  <View
+                    style={[
+                      styles.iconBadge,
+                      isEmailInvalid && styles.iconBadgeError,
+                    ]}
+                  >
+                    <Ionicons
+                      name="mail-outline"
+                      size={18}
+                      color={
+                        isEmailInvalid
+                          ? Palette.brand.danger
+                          : emailFocused
+                            ? Palette.blue[500]
+                            : Palette.blue[400]
+                      }
+                    />
+                  </View>
+                  <TextInput
+                    style={styles.textInput}
+                    placeholder="Masukkan Emailmu"
+                    placeholderTextColor={Palette.text.inactive}
+                    value={email}
+                    onChangeText={setEmail}
+                    onFocus={() => setEmailFocused(true)}
+                    onBlur={() => setEmailFocused(false)}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                  />
+                </View>
+
+                {/* Email Warning */}
+                {isEmailInvalid && (
+                  <ThemedText style={styles.errorText}>
+                    Format email harus sesuai (contoh: email@example.com)
+                  </ThemedText>
+                )}
+              </View>
+
+              {/* Next Button */}
+              <TouchableOpacity
+                style={[
+                  styles.primaryButton,
+                  {
+                    backgroundColor: isValidEmail
+                      ? Palette.button.primary
+                      : Palette.button.second,
+                  },
+                ]}
+                disabled={!isValidEmail}
+                onPress={handleNextPress}
+                activeOpacity={isValidEmail ? 0.85 : 1}
+              >
+                <ThemedText style={styles.primaryButtonText}>
+                  Selanjutnya
+                </ThemedText>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  bgImage: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+  },
   safeArea: {
     flex: 1,
-    backgroundColor: "#FAFCFE",
   },
   keyboardView: {
     flex: 1,

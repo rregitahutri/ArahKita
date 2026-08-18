@@ -3,6 +3,7 @@ import * as Haptics from "expo-haptics";
 import React, { useState } from "react";
 import {
   Image,
+  ImageBackground,
   KeyboardAvoidingView,
   Modal,
   Platform,
@@ -68,269 +69,279 @@ export default function ForgotPasswordResetScreen({
   };
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={["top", "left", "right"]}>
-      <KeyboardAvoidingView
-        style={styles.keyboardView}
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-      >
-        <ScrollView
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
+    <ImageBackground
+      source={require("@/assets/images/bg-forgot-password.png")}
+      style={styles.bgImage}
+      resizeMode="cover"
+    >
+      <SafeAreaView style={styles.safeArea} edges={["top", "left", "right"]}>
+        <KeyboardAvoidingView
+          style={styles.keyboardView}
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
         >
-          {/* Header Bar */}
-          <View style={styles.navHeader}>
-            <TouchableOpacity
-              style={styles.backButton}
-              activeOpacity={0.7}
-              onPress={handleBackPress}
-            >
-              <Ionicons
-                name="chevron-back"
-                size={22}
-                color={Palette.text.active}
-              />
-            </TouchableOpacity>
-
-            <ThemedText style={styles.screenTitle}>Lupa Sandi</ThemedText>
-
-            <View style={styles.headerSpacer} />
-          </View>
-
-          {/* AI Voice Assistant Card */}
-          <View style={styles.assistantCard}>
-            <View style={styles.greetingBox}>
-              <ThemedText style={styles.greetingTitle}>
-                Buat kata sandi baru
-              </ThemedText>
-              <ThemedText style={styles.greetingSubtitle}>
-                Gunakan setidaknya 6 karakter, termasuk huruf, angka, dan
-                simbol.
-              </ThemedText>
-            </View>
-
-            {/* Voice Waveform */}
-            <View style={styles.waveContainer}>
-              <Image
-                source={require("@/assets/icons/ic-onboarding-voice.png")}
-                style={styles.waveformImage}
-                resizeMode="contain"
-              />
-            </View>
-
-            {/* Microphone Button */}
-            <TouchableOpacity
-              style={[
-                styles.micWrapper,
-                isListening && styles.micWrapperActive,
-              ]}
-              activeOpacity={0.8}
-              onPress={handleMicPress}
-            >
-              <Image
-                source={require("@/assets/icons/ic-onboarding-mic.png")}
-                style={styles.micImage}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-          </View>
-
-          {/* Form Section */}
-          <View style={styles.formContainer}>
-            {/* Password Field */}
-            <View style={styles.inputGroup}>
-              <ThemedText style={styles.label}>Kata sandi</ThemedText>
-              <View
-                style={[
-                  styles.inputWrapper,
-                  passwordFocused && styles.inputWrapperFocused,
-                  isPasswordTooShort && styles.inputWrapperError,
-                ]}
+          <ScrollView
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+          >
+            {/* Header Bar */}
+            <View style={styles.navHeader}>
+              <TouchableOpacity
+                style={styles.backButton}
+                activeOpacity={0.7}
+                onPress={handleBackPress}
               >
-                <View
-                  style={[
-                    styles.iconBadge,
-                    isPasswordTooShort && styles.iconBadgeError,
-                  ]}
-                >
-                  <Ionicons
-                    name="lock-closed-outline"
-                    size={18}
-                    color={
-                      isPasswordTooShort
-                        ? Palette.brand.danger
-                        : passwordFocused
-                          ? Palette.blue[500]
-                          : Palette.blue[400]
-                    }
-                  />
-                </View>
-                <TextInput
-                  style={styles.textInput}
-                  placeholder="Buat kata sandimu"
-                  placeholderTextColor={Palette.text.inactive}
-                  value={password}
-                  onChangeText={setPassword}
-                  onFocus={() => setPasswordFocused(true)}
-                  onBlur={() => setPasswordFocused(false)}
-                  secureTextEntry={!showPassword}
-                  autoCapitalize="none"
-                  autoCorrect={false}
+                <Ionicons
+                  name="chevron-back"
+                  size={22}
+                  color={Palette.text.active}
                 />
-                <TouchableOpacity
-                  style={styles.eyeButton}
-                  onPress={() => {
-                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                    setShowPassword((prev) => !prev);
-                  }}
-                  activeOpacity={0.7}
-                >
-                  <Ionicons
-                    name={showPassword ? "eye-outline" : "eye-off-outline"}
-                    size={19}
-                    color={Palette.text.inactive}
-                  />
-                </TouchableOpacity>
+              </TouchableOpacity>
+
+              <ThemedText style={styles.screenTitle}>Lupa Sandi</ThemedText>
+
+              <View style={styles.headerSpacer} />
+            </View>
+
+            {/* AI Voice Assistant Card */}
+            <View style={styles.assistantCard}>
+              <View style={styles.greetingBox}>
+                <ThemedText style={styles.greetingTitle}>
+                  Buat kata sandi baru
+                </ThemedText>
+                <ThemedText style={styles.greetingSubtitle}>
+                  Gunakan setidaknya 6 karakter, termasuk huruf, angka, dan
+                  simbol.
+                </ThemedText>
               </View>
 
-              {/* Password Warning */}
-              {isPasswordTooShort && (
-                <ThemedText style={styles.errorText}>
-                  Kata sandi minimal 6 karakter
-                </ThemedText>
-              )}
-            </View>
-
-            {/* Confirm Password Field */}
-            <View style={styles.inputGroup}>
-              <ThemedText style={styles.label}>
-                Konfirmasi kata sandi
-              </ThemedText>
-              <View
-                style={[
-                  styles.inputWrapper,
-                  confirmPasswordFocused && styles.inputWrapperFocused,
-                  isConfirmPasswordMismatch && styles.inputWrapperError,
-                ]}
-              >
-                <View
-                  style={[
-                    styles.iconBadge,
-                    isConfirmPasswordMismatch && styles.iconBadgeError,
-                  ]}
-                >
-                  <Ionicons
-                    name="lock-closed-outline"
-                    size={18}
-                    color={
-                      isConfirmPasswordMismatch
-                        ? Palette.brand.danger
-                        : confirmPasswordFocused
-                          ? Palette.blue[500]
-                          : Palette.blue[400]
-                    }
-                  />
-                </View>
-                <TextInput
-                  style={styles.textInput}
-                  placeholder="Konfirmasi kata sandimu"
-                  placeholderTextColor={Palette.text.inactive}
-                  value={confirmPassword}
-                  onChangeText={setConfirmPassword}
-                  onFocus={() => setConfirmPasswordFocused(true)}
-                  onBlur={() => setConfirmPasswordFocused(false)}
-                  secureTextEntry={!showConfirmPassword}
-                  autoCapitalize="none"
-                  autoCorrect={false}
+              {/* Voice Waveform */}
+              <View style={styles.waveContainer}>
+                <Image
+                  source={require("@/assets/icons/ic-onboarding-voice.png")}
+                  style={styles.waveformImage}
+                  resizeMode="contain"
                 />
-                <TouchableOpacity
-                  style={styles.eyeButton}
-                  onPress={() => {
-                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                    setShowConfirmPassword((prev) => !prev);
-                  }}
-                  activeOpacity={0.7}
-                >
-                  <Ionicons
-                    name={
-                      showConfirmPassword ? "eye-outline" : "eye-off-outline"
-                    }
-                    size={19}
-                    color={Palette.text.inactive}
-                  />
-                </TouchableOpacity>
               </View>
 
-              {/* Confirm Password Warning */}
-              {isConfirmPasswordMismatch && (
-                <ThemedText style={styles.errorText}>
-                  Konfirmasi kata sandi tidak cocok
+              {/* Microphone Button */}
+              <TouchableOpacity
+                style={[
+                  styles.micWrapper,
+                  isListening && styles.micWrapperActive,
+                ]}
+                activeOpacity={0.8}
+                onPress={handleMicPress}
+              >
+                <Image
+                  source={require("@/assets/icons/ic-onboarding-mic.png")}
+                  style={styles.micImage}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+            </View>
+
+            {/* Form Section */}
+            <View style={styles.formContainer}>
+              {/* Password Field */}
+              <View style={styles.inputGroup}>
+                <ThemedText style={styles.label}>Kata sandi</ThemedText>
+                <View
+                  style={[
+                    styles.inputWrapper,
+                    passwordFocused && styles.inputWrapperFocused,
+                    isPasswordTooShort && styles.inputWrapperError,
+                  ]}
+                >
+                  <View
+                    style={[
+                      styles.iconBadge,
+                      isPasswordTooShort && styles.iconBadgeError,
+                    ]}
+                  >
+                    <Ionicons
+                      name="lock-closed-outline"
+                      size={18}
+                      color={
+                        isPasswordTooShort
+                          ? Palette.brand.danger
+                          : passwordFocused
+                            ? Palette.blue[500]
+                            : Palette.blue[400]
+                      }
+                    />
+                  </View>
+                  <TextInput
+                    style={styles.textInput}
+                    placeholder="Buat kata sandimu"
+                    placeholderTextColor={Palette.text.inactive}
+                    value={password}
+                    onChangeText={setPassword}
+                    onFocus={() => setPasswordFocused(true)}
+                    onBlur={() => setPasswordFocused(false)}
+                    secureTextEntry={!showPassword}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                  />
+                  <TouchableOpacity
+                    style={styles.eyeButton}
+                    onPress={() => {
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                      setShowPassword((prev) => !prev);
+                    }}
+                    activeOpacity={0.7}
+                  >
+                    <Ionicons
+                      name={showPassword ? "eye-outline" : "eye-off-outline"}
+                      size={19}
+                      color={Palette.text.inactive}
+                    />
+                  </TouchableOpacity>
+                </View>
+
+                {/* Password Warning */}
+                {isPasswordTooShort && (
+                  <ThemedText style={styles.errorText}>
+                    Kata sandi minimal 6 karakter
+                  </ThemedText>
+                )}
+              </View>
+
+              {/* Confirm Password Field */}
+              <View style={styles.inputGroup}>
+                <ThemedText style={styles.label}>
+                  Konfirmasi kata sandi
                 </ThemedText>
-              )}
+                <View
+                  style={[
+                    styles.inputWrapper,
+                    confirmPasswordFocused && styles.inputWrapperFocused,
+                    isConfirmPasswordMismatch && styles.inputWrapperError,
+                  ]}
+                >
+                  <View
+                    style={[
+                      styles.iconBadge,
+                      isConfirmPasswordMismatch && styles.iconBadgeError,
+                    ]}
+                  >
+                    <Ionicons
+                      name="lock-closed-outline"
+                      size={18}
+                      color={
+                        isConfirmPasswordMismatch
+                          ? Palette.brand.danger
+                          : confirmPasswordFocused
+                            ? Palette.blue[500]
+                            : Palette.blue[400]
+                      }
+                    />
+                  </View>
+                  <TextInput
+                    style={styles.textInput}
+                    placeholder="Konfirmasi kata sandimu"
+                    placeholderTextColor={Palette.text.inactive}
+                    value={confirmPassword}
+                    onChangeText={setConfirmPassword}
+                    onFocus={() => setConfirmPasswordFocused(true)}
+                    onBlur={() => setConfirmPasswordFocused(false)}
+                    secureTextEntry={!showConfirmPassword}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                  />
+                  <TouchableOpacity
+                    style={styles.eyeButton}
+                    onPress={() => {
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                      setShowConfirmPassword((prev) => !prev);
+                    }}
+                    activeOpacity={0.7}
+                  >
+                    <Ionicons
+                      name={
+                        showConfirmPassword ? "eye-outline" : "eye-off-outline"
+                      }
+                      size={19}
+                      color={Palette.text.inactive}
+                    />
+                  </TouchableOpacity>
+                </View>
+
+                {/* Confirm Password Warning */}
+                {isConfirmPasswordMismatch && (
+                  <ThemedText style={styles.errorText}>
+                    Konfirmasi kata sandi tidak cocok
+                  </ThemedText>
+                )}
+              </View>
+
+              {/* Next Button */}
+              <TouchableOpacity
+                style={[
+                  styles.primaryButton,
+                  {
+                    backgroundColor: isValidForm
+                      ? Palette.button.primary
+                      : Palette.button.second,
+                  },
+                ]}
+                disabled={!isValidForm}
+                onPress={handleNextPress}
+                activeOpacity={isValidForm ? 0.85 : 1}
+              >
+                <ThemedText style={styles.primaryButtonText}>
+                  Selanjutnya
+                </ThemedText>
+              </TouchableOpacity>
             </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
 
-            {/* Next Button */}
-            <TouchableOpacity
-              style={[
-                styles.primaryButton,
-                {
-                  backgroundColor: isValidForm
-                    ? Palette.button.primary
-                    : Palette.button.second,
-                },
-              ]}
-              disabled={!isValidForm}
-              onPress={handleNextPress}
-              activeOpacity={isValidForm ? 0.85 : 1}
-            >
-              <ThemedText style={styles.primaryButtonText}>
-                Selanjutnya
+        {/* Success Completion Notification Modal */}
+        <Modal
+          visible={showSuccessModal}
+          transparent
+          animationType="fade"
+          onRequestClose={() => {}}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalCard}>
+              {/* Green Checkmark Circle Icon */}
+              <View style={styles.successCircle}>
+                <Ionicons name="checkmark" size={32} color="#FFFFFF" />
+              </View>
+
+              {/* Notification Text */}
+              <ThemedText style={styles.modalMessageText}>
+                Congrats! Your password has been reset, please log in again
               </ThemedText>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
 
-      {/* Success Completion Notification Modal */}
-      <Modal
-        visible={showSuccessModal}
-        transparent
-        animationType="fade"
-        onRequestClose={() => {}}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalCard}>
-            {/* Green Checkmark Circle Icon */}
-            <View style={styles.successCircle}>
-              <Ionicons name="checkmark" size={32} color="#FFFFFF" />
+              {/* Back to Login Button */}
+              <TouchableOpacity
+                style={styles.modalButton}
+                activeOpacity={0.85}
+                onPress={handleBackToLoginPress}
+              >
+                <ThemedText style={styles.modalButtonText}>
+                  Back to Login
+                </ThemedText>
+              </TouchableOpacity>
             </View>
-
-            {/* Notification Text */}
-            <ThemedText style={styles.modalMessageText}>
-              Congrats! Your password has been reset, please log in again
-            </ThemedText>
-
-            {/* Back to Login Button */}
-            <TouchableOpacity
-              style={styles.modalButton}
-              activeOpacity={0.85}
-              onPress={handleBackToLoginPress}
-            >
-              <ThemedText style={styles.modalButtonText}>
-                Back to Login
-              </ThemedText>
-            </TouchableOpacity>
           </View>
-        </View>
-      </Modal>
-    </SafeAreaView>
+        </Modal>
+      </SafeAreaView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  bgImage: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+  },
   safeArea: {
     flex: 1,
-    backgroundColor: "#FAFCFE",
   },
   keyboardView: {
     flex: 1,
@@ -518,7 +529,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#FFFFFF",
   },
-  /* Modal Styles matching iPhone 16 Plus - 24 mockup */
+  /* Modal Styles */
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.45)",

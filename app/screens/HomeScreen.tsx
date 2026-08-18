@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import {
   Alert,
   Image,
+  ImageBackground,
   ScrollView,
   StyleSheet,
   TextInput,
@@ -146,442 +147,461 @@ export default function HomeScreen({ onNavigateToTab }: HomeScreenProps) {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={["top", "left", "right"]}>
-      <View style={styles.mainContainer}>
-        <ScrollView
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        >
-          {/* Top Location & Notification Header */}
-          <View style={styles.topHeader}>
-            <View style={styles.locationContainer}>
-              <Image
-                source={require("@/assets/icons/ic-homepage-current-location.png")}
-                style={styles.locationIconAsset}
-                resizeMode="contain"
-              />
-              <View style={styles.locationTextGroup}>
-                <ThemedText style={styles.locationLabel}>
-                  Lokasi kamu, saat ini
-                </ThemedText>
-                <ThemedText style={styles.locationName}>
-                  Jakarta Selatan
-                </ThemedText>
+    <ImageBackground
+      source={require("@/assets/images/bg-homepage.png")}
+      style={styles.bgImage}
+      resizeMode="cover"
+    >
+      <SafeAreaView style={styles.safeArea} edges={["top", "left", "right"]}>
+        <View style={styles.mainContainer}>
+          <ScrollView
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+          >
+            {/* Top Location & Notification Header */}
+            <View style={styles.topHeader}>
+              <View style={styles.locationContainer}>
+                <Image
+                  source={require("@/assets/icons/ic-homepage-current-location.png")}
+                  style={styles.locationIconAsset}
+                  resizeMode="contain"
+                />
+                <View style={styles.locationTextGroup}>
+                  <ThemedText style={styles.locationLabel}>
+                    Lokasi kamu, saat ini
+                  </ThemedText>
+                  <ThemedText style={styles.locationName}>
+                    Jakarta Selatan
+                  </ThemedText>
+                </View>
               </View>
+
+              {/* Notification Bell Button Asset */}
+              <TouchableOpacity
+                style={styles.notificationButton}
+                activeOpacity={0.8}
+                onPress={handleNotificationPress}
+              >
+                <Image
+                  source={require("@/assets/icons/ic-homepage-notification.png")}
+                  style={styles.notificationIconAsset}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
             </View>
 
-            {/* Notification Bell Button Asset */}
-            <TouchableOpacity
-              style={styles.notificationButton}
-              activeOpacity={0.8}
-              onPress={handleNotificationPress}
-            >
-              <Image
-                source={require("@/assets/icons/ic-homepage-notification.png")}
-                style={styles.notificationIconAsset}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-          </View>
-
-          {/* AI Voice Assistant Hero Search Card */}
-          <View style={styles.heroCard}>
-            {/* Top Assistant Prompt Box */}
-            <TouchableOpacity
-              style={styles.heroPromptBox}
-              activeOpacity={0.9}
-              onPress={handleAiSparklePress}
-            >
-              <Image
-                source={require("@/assets/icons/ic-homepage-ai-assistant.png")}
-                style={styles.heroAiIconAsset}
-                resizeMode="contain"
-              />
-
-              <View style={styles.heroPromptTextGroup}>
-                <ThemedText style={styles.heroPromptTitle}>
-                  Ada yang bisa kami bantu hari ini?
-                </ThemedText>
-                <ThemedText style={styles.heroPromptSubtitle}>
-                  Cari layanan terdekat, minta bantuan, atau tanya apa pun.
-                </ThemedText>
-              </View>
-
-              <View style={styles.heroArrowCircle}>
-                <Ionicons name="chevron-forward" size={16} color="#FFFFFF" />
-              </View>
-            </TouchableOpacity>
-
-            {/* Search Input Bar with Icon Assets */}
-            <View style={styles.searchBarWrapper}>
-              <Image
-                source={require("@/assets/icons/ic-homepage-search.png")}
-                style={styles.searchIconAsset}
-                resizeMode="contain"
-              />
-              <TextInput
-                style={styles.searchInput}
-                placeholder="Cari layanan publik disini..."
-                placeholderTextColor={Palette.text.inactive}
-                value={searchQuery}
-                onChangeText={setSearchQuery}
-              />
+            {/* AI Voice Assistant Hero Search Card */}
+            <View style={styles.heroCard}>
+              {/* Top Assistant Prompt Box */}
               <TouchableOpacity
-                style={styles.micSearchButton}
-                activeOpacity={0.7}
-                onPress={handleMicSearch}
+                style={styles.heroPromptBox}
+                activeOpacity={0.9}
+                onPress={handleAiSparklePress}
               >
+                <Image
+                  source={require("@/assets/icons/ic-homepage-ai-assistant.png")}
+                  style={styles.heroAiIconAsset}
+                  resizeMode="contain"
+                />
+
+                <View style={styles.heroPromptTextGroup}>
+                  <ThemedText style={styles.heroPromptTitle}>
+                    Ada yang bisa kami bantu hari ini?
+                  </ThemedText>
+                  <ThemedText style={styles.heroPromptSubtitle}>
+                    Cari layanan terdekat, minta bantuan, atau tanya apa pun.
+                  </ThemedText>
+                </View>
+
                 <Image
                   source={require("@/assets/icons/ic-homepage-mic.png")}
                   style={styles.micIconAsset}
                   resizeMode="contain"
                 />
               </TouchableOpacity>
-            </View>
-          </View>
 
-          {/* 4 Feature Cards Grid (2x2 Grid using icon assets) */}
-          <View style={styles.featureGrid}>
-            {/* Feature 1: Layanan Publik */}
-            <TouchableOpacity
-              style={styles.featureCard}
-              activeOpacity={0.8}
-              onPress={() =>
-                Alert.alert(
-                  "Layanan Publik",
-                  "Membuka daftar fasilitas publik ramah difabel terdekat.",
-                )
-              }
-            >
-              <Image
-                source={require("@/assets/icons/ic-homepage-public-services.png")}
-                style={styles.featureIconAsset}
-                resizeMode="contain"
-              />
-              <ThemedText style={styles.featureTitle}>
-                Layanan Publik
-              </ThemedText>
-              <ThemedText style={styles.featureSubtitle}>
-                Temukan layanan umum ramah difabel di sekitarmu.
-              </ThemedText>
-            </TouchableOpacity>
-
-            {/* Feature 2: Asisten Digital */}
-            <TouchableOpacity
-              style={styles.featureCard}
-              activeOpacity={0.8}
-              onPress={handleAiSparklePress}
-            >
-              <Image
-                source={require("@/assets/icons/ic-homepage-digital-assistant.png")}
-                style={styles.featureIconAsset}
-                resizeMode="contain"
-              />
-              <ThemedText style={styles.featureTitle}>
-                Asisten Digital
-              </ThemedText>
-              <ThemedText style={styles.featureSubtitle}>
-                Tanya dan kendalikan aplikasi dengan suara atau teks.
-              </ThemedText>
-            </TouchableOpacity>
-
-            {/* Feature 3: Navigasi Rute */}
-            <TouchableOpacity
-              style={styles.featureCard}
-              activeOpacity={0.8}
-              onPress={() =>
-                Alert.alert(
-                  "Navigasi Rute",
-                  "Membuka panduan navigasi rute ramah difabel.",
-                )
-              }
-            >
-              <Image
-                source={require("@/assets/icons/ic-homepage-route-navigation.png")}
-                style={styles.featureIconAsset}
-                resizeMode="contain"
-              />
-              <ThemedText style={styles.featureTitle}>Navigasi Rute</ThemedText>
-              <ThemedText style={styles.featureSubtitle}>
-                Panduan rute aman dan mudah diakses sesuai kebutuhanmu.
-              </ThemedText>
-            </TouchableOpacity>
-
-            {/* Feature 4: Bantuan Darurat */}
-            <TouchableOpacity
-              style={styles.featureCard}
-              activeOpacity={0.8}
-              onPress={handleEmergencyCall}
-            >
-              <Image
-                source={require("@/assets/icons/ic-homepage-emergency-assistance.png")}
-                style={styles.featureIconAsset}
-                resizeMode="contain"
-              />
-              <ThemedText style={styles.featureTitle}>
-                Bantuan Darurat
-              </ThemedText>
-              <ThemedText style={styles.featureSubtitle}>
-                Hubungi layanan darurat dan bagikan lokasi dengan cepat.
-              </ThemedText>
-            </TouchableOpacity>
-          </View>
-
-          {/* Section: Layanan Terdekat (Horizontal Scroll) */}
-          <View style={styles.sectionHeader}>
-            <ThemedText style={styles.sectionTitle}>
-              Layanan Terdekat
-            </ThemedText>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              onPress={() =>
-                Alert.alert(
-                  "Layanan Terdekat",
-                  "Menampilkan seluruh daftar layanan terdekat.",
-                )
-              }
-            >
-              <View style={styles.seeAllGroup}>
-                <ThemedText style={styles.seeAllText}>Lihat Semua</ThemedText>
-                <Ionicons
-                  name="chevron-forward"
-                  size={14}
-                  color={Palette.blue[500]}
+              {/* Search Input Bar with Icon Assets */}
+              <View style={styles.searchBarWrapper}>
+                <Image
+                  source={require("@/assets/icons/ic-homepage-search.png")}
+                  style={styles.searchIconAsset}
+                  resizeMode="contain"
                 />
+                <TextInput
+                  style={styles.searchInput}
+                  placeholder="Cari layanan publik disini..."
+                  placeholderTextColor={Palette.text.inactive}
+                  value={searchQuery}
+                  onChangeText={setSearchQuery}
+                />
+                <TouchableOpacity
+                  style={styles.micSearchButton}
+                  activeOpacity={0.7}
+                  onPress={handleMicSearch}
+                >
+                  <Image
+                    source={require("@/assets/icons/ic-homepage-voice.png")}
+                    style={styles.searchIconAsset}
+                    resizeMode="contain"
+                  />
+                </TouchableOpacity>
               </View>
-            </TouchableOpacity>
-          </View>
+            </View>
 
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.horizontalScrollContent}
-          >
-            {NEARBY_SERVICES.map((item) => (
+            {/* 4 Feature Cards Grid (2x2 Grid using icon assets) */}
+            <View style={styles.featureGrid}>
+              {/* Feature 1: Layanan Publik */}
               <TouchableOpacity
-                key={item.id}
-                style={styles.serviceCard}
-                activeOpacity={0.85}
+                style={styles.featureCard}
+                activeOpacity={0.8}
                 onPress={() =>
                   Alert.alert(
-                    item.title,
-                    `${item.category} • ${item.distance}\n${item.description}`,
+                    "Layanan Publik",
+                    "Membuka daftar fasilitas publik ramah difabel terdekat.",
                   )
                 }
               >
-                {/* Image Container with Category Icon Asset Overlay */}
-                <View style={styles.serviceImageContainer}>
-                  <Image
-                    source={item.image}
-                    style={styles.serviceImage}
-                    resizeMode="cover"
-                  />
-                  <View style={styles.categoryPill}>
-                    <Image
-                      source={item.categoryIconAsset}
-                      style={styles.categoryIconAsset}
-                      resizeMode="contain"
-                    />
-                    <ThemedText style={styles.categoryPillText}>
-                      {item.category}
-                    </ThemedText>
-                  </View>
-                </View>
-
-                {/* Card Info Content */}
-                <View style={styles.serviceCardContent}>
-                  {/* Badges Row */}
-                  <View style={styles.badgeRow}>
-                    <View style={styles.distanceBadge}>
-                      <ThemedText style={styles.distanceBadgeText}>
-                        {item.distance}
-                      </ThemedText>
-                    </View>
-                    <View style={styles.featureBadge}>
-                      <ThemedText style={styles.featureBadgeText}>
-                        {item.featureBadge}
-                      </ThemedText>
-                    </View>
-                  </View>
-
-                  {/* Title & Description */}
-                  <ThemedText style={styles.serviceCardTitle} numberOfLines={1}>
-                    {item.title}
-                  </ThemedText>
-                  <ThemedText
-                    style={styles.serviceCardDescription}
-                    numberOfLines={2}
-                  >
-                    {item.description}
-                  </ThemedText>
-                </View>
+                <Image
+                  source={require("@/assets/icons/ic-homepage-public-services.png")}
+                  style={styles.featureIconAsset}
+                  resizeMode="contain"
+                />
+                <ThemedText style={styles.featureTitle}>
+                  Layanan Publik
+                </ThemedText>
+                <ThemedText style={styles.featureSubtitle}>
+                  Temukan layanan umum ramah difabel di sekitarmu.
+                </ThemedText>
               </TouchableOpacity>
-            ))}
-          </ScrollView>
 
-          {/* Section: Bantuan Darurat */}
-          <View style={styles.sectionHeader}>
-            <ThemedText style={styles.sectionTitle}>Bantuan Darurat</ThemedText>
-          </View>
+              {/* Feature 2: Asisten Digital */}
+              <TouchableOpacity
+                style={styles.featureCard}
+                activeOpacity={0.8}
+                onPress={handleAiSparklePress}
+              >
+                <Image
+                  source={require("@/assets/icons/ic-homepage-digital-assistant.png")}
+                  style={styles.featureIconAsset}
+                  resizeMode="contain"
+                />
+                <ThemedText style={styles.featureTitle}>
+                  Asisten Digital
+                </ThemedText>
+                <ThemedText style={styles.featureSubtitle}>
+                  Tanya dan kendalikan aplikasi dengan suara atau teks.
+                </ThemedText>
+              </TouchableOpacity>
 
-          <View style={styles.emergencyCard}>
-            <View style={styles.emergencyPromptBox}>
-              <Image
-                source={require("@/assets/icons/ic-emergency.png")}
-                style={styles.emergencyIconAsset}
-                resizeMode="contain"
-              />
-              <View style={styles.emergencyTextGroup}>
-                <ThemedText style={styles.emergencyPromptTitle}>
-                  Kamu butuh bantuan darurat sekarang?
+              {/* Feature 3: Navigasi Rute */}
+              <TouchableOpacity
+                style={styles.featureCard}
+                activeOpacity={0.8}
+                onPress={() =>
+                  Alert.alert(
+                    "Navigasi Rute",
+                    "Membuka panduan navigasi rute ramah difabel.",
+                  )
+                }
+              >
+                <Image
+                  source={require("@/assets/icons/ic-homepage-route-navigation.png")}
+                  style={styles.featureIconAsset}
+                  resizeMode="contain"
+                />
+                <ThemedText style={styles.featureTitle}>
+                  Navigasi Rute
                 </ThemedText>
-                <ThemedText style={styles.emergencyPromptSubtitle}>
-                  Kami akan menghubungkanmu dengan layanan darurat di sekitar.
+                <ThemedText style={styles.featureSubtitle}>
+                  Panduan rute aman dan mudah diakses sesuai kebutuhanmu.
                 </ThemedText>
-              </View>
+              </TouchableOpacity>
+
+              {/* Feature 4: Bantuan Darurat */}
+              <TouchableOpacity
+                style={styles.featureCard}
+                activeOpacity={0.8}
+                onPress={handleEmergencyCall}
+              >
+                <Image
+                  source={require("@/assets/icons/ic-homepage-emergency-assistance.png")}
+                  style={styles.featureIconAsset}
+                  resizeMode="contain"
+                />
+                <ThemedText style={styles.featureTitle}>
+                  Bantuan Darurat
+                </ThemedText>
+                <ThemedText style={styles.featureSubtitle}>
+                  Hubungi layanan darurat dan bagikan lokasi dengan cepat.
+                </ThemedText>
+              </TouchableOpacity>
             </View>
 
+            {/* Section: Layanan Terdekat (Horizontal Scroll) */}
+            <View style={styles.sectionHeader}>
+              <ThemedText style={styles.sectionTitle}>
+                Layanan Terdekat
+              </ThemedText>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() =>
+                  Alert.alert(
+                    "Layanan Terdekat",
+                    "Menampilkan seluruh daftar layanan terdekat.",
+                  )
+                }
+              >
+                <View style={styles.seeAllGroup}>
+                  <ThemedText style={styles.seeAllText}>Lihat Semua</ThemedText>
+                  <Ionicons
+                    name="chevron-forward"
+                    size={14}
+                    color={Palette.blue[500]}
+                  />
+                </View>
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.horizontalScrollContent}
+            >
+              {NEARBY_SERVICES.map((item) => (
+                <TouchableOpacity
+                  key={item.id}
+                  style={styles.serviceCard}
+                  activeOpacity={0.85}
+                  onPress={() =>
+                    Alert.alert(
+                      item.title,
+                      `${item.category} • ${item.distance}\n${item.description}`,
+                    )
+                  }
+                >
+                  {/* Image Container with Category Icon Asset Overlay */}
+                  <View style={styles.serviceImageContainer}>
+                    <Image
+                      source={item.image}
+                      style={styles.serviceImage}
+                      resizeMode="cover"
+                    />
+                    <View style={styles.categoryPill}>
+                      <Image
+                        source={item.categoryIconAsset}
+                        style={styles.categoryIconAsset}
+                        resizeMode="contain"
+                      />
+                      <ThemedText style={styles.categoryPillText}>
+                        {item.category}
+                      </ThemedText>
+                    </View>
+                  </View>
+
+                  {/* Card Info Content */}
+                  <View style={styles.serviceCardContent}>
+                    {/* Badges Row */}
+                    <View style={styles.badgeRow}>
+                      <View style={styles.distanceBadge}>
+                        <ThemedText style={styles.distanceBadgeText}>
+                          {item.distance}
+                        </ThemedText>
+                      </View>
+                      <View style={styles.featureBadge}>
+                        <ThemedText style={styles.featureBadgeText}>
+                          {item.featureBadge}
+                        </ThemedText>
+                      </View>
+                    </View>
+
+                    {/* Title & Description */}
+                    <ThemedText
+                      style={styles.serviceCardTitle}
+                      numberOfLines={1}
+                    >
+                      {item.title}
+                    </ThemedText>
+                    <ThemedText
+                      style={styles.serviceCardDescription}
+                      numberOfLines={2}
+                    >
+                      {item.description}
+                    </ThemedText>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+
+            {/* Section: Bantuan Darurat */}
+            <View style={styles.sectionHeader}>
+              <ThemedText style={styles.sectionTitle}>
+                Bantuan Darurat
+              </ThemedText>
+            </View>
+
+            <View style={styles.emergencyCard}>
+              <View style={styles.emergencyPromptBox}>
+                <Image
+                  source={require("@/assets/icons/ic-emergency.png")}
+                  style={styles.emergencyIconAsset}
+                  resizeMode="contain"
+                />
+                <View style={styles.emergencyTextGroup}>
+                  <ThemedText style={styles.emergencyPromptTitle}>
+                    Kamu butuh bantuan darurat sekarang?
+                  </ThemedText>
+                  <ThemedText style={styles.emergencyPromptSubtitle}>
+                    Kami akan menghubungkanmu dengan layanan darurat di sekitar.
+                  </ThemedText>
+                </View>
+              </View>
+
+              <TouchableOpacity
+                style={styles.emergencyButton}
+                activeOpacity={0.85}
+                onPress={handleEmergencyCall}
+              >
+                <ThemedText style={styles.emergencyButtonText}>
+                  Panggil Bantuan Darurat
+                </ThemedText>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+
+          {/* Bottom Navigation Bar with Exact Nav Icon Assets */}
+          <View style={styles.bottomNavContainer}>
+            <View style={styles.bottomNavContent}>
+              {/* Tab 1: Beranda */}
+              <TouchableOpacity
+                style={styles.navItem}
+                activeOpacity={0.7}
+                onPress={() => handleTabPress("beranda")}
+              >
+                <Image
+                  source={
+                    activeTab === "beranda"
+                      ? require("@/assets/icons/ic-nav-home-active.png")
+                      : require("@/assets/icons/ic-nav-home.png")
+                  }
+                  style={styles.navIconAsset}
+                  resizeMode="contain"
+                />
+                <ThemedText
+                  style={[
+                    styles.navLabel,
+                    activeTab === "beranda" && styles.navLabelActive,
+                  ]}
+                >
+                  Beranda
+                </ThemedText>
+              </TouchableOpacity>
+
+              {/* Tab 2: Layanan */}
+              <TouchableOpacity
+                style={styles.navItem}
+                activeOpacity={0.7}
+                onPress={() => handleTabPress("layanan")}
+              >
+                <Image
+                  source={
+                    activeTab === "layanan"
+                      ? require("@/assets/icons/ic-nav-layanan-active.png")
+                      : require("@/assets/icons/ic-nav-layanan.png")
+                  }
+                  style={styles.navIconAsset}
+                  resizeMode="contain"
+                />
+                <ThemedText
+                  style={[
+                    styles.navLabel,
+                    activeTab === "layanan" && styles.navLabelActive,
+                  ]}
+                >
+                  Layanan
+                </ThemedText>
+              </TouchableOpacity>
+
+              {/* Floating Center AI Button Spacer */}
+              <View style={styles.centerFloatingSpacer} />
+
+              {/* Tab 3: Komunitas */}
+              <TouchableOpacity
+                style={styles.navItem}
+                activeOpacity={0.7}
+                onPress={() => handleTabPress("komunitas")}
+              >
+                <Image
+                  source={
+                    activeTab === "komunitas"
+                      ? require("@/assets/icons/ic-nav-komunitas-active.png")
+                      : require("@/assets/icons/ic-nav-komunitas.png")
+                  }
+                  style={styles.navIconAsset}
+                  resizeMode="contain"
+                />
+                <ThemedText
+                  style={[
+                    styles.navLabel,
+                    activeTab === "komunitas" && styles.navLabelActive,
+                  ]}
+                >
+                  Komunitas
+                </ThemedText>
+              </TouchableOpacity>
+
+              {/* Tab 4: Profil */}
+              <TouchableOpacity
+                style={styles.navItem}
+                activeOpacity={0.7}
+                onPress={() => handleTabPress("profil")}
+              >
+                <Image
+                  source={
+                    activeTab === "profil"
+                      ? require("@/assets/icons/ic-nav-profil-active.png")
+                      : require("@/assets/icons/ic-nav-profil.png")
+                  }
+                  style={styles.navIconAsset}
+                  resizeMode="contain"
+                />
+                <ThemedText
+                  style={[
+                    styles.navLabel,
+                    activeTab === "profil" && styles.navLabelActive,
+                  ]}
+                >
+                  Profil
+                </ThemedText>
+              </TouchableOpacity>
+            </View>
+
+            {/* Floating Sparkle AI Center Button Asset */}
             <TouchableOpacity
-              style={styles.emergencyButton}
+              style={styles.floatingAiButton}
               activeOpacity={0.85}
-              onPress={handleEmergencyCall}
+              onPress={handleAiSparklePress}
             >
-              <ThemedText style={styles.emergencyButtonText}>
-                Panggil Bantuan Darurat
-              </ThemedText>
+              <Image
+                source={require("@/assets/icons/ic-nav-ai.png")}
+                style={styles.floatingAiAsset}
+                resizeMode="contain"
+              />
             </TouchableOpacity>
           </View>
-        </ScrollView>
-
-        {/* Bottom Navigation Bar with Exact Nav Icon Assets */}
-        <View style={styles.bottomNavContainer}>
-          <View style={styles.bottomNavContent}>
-            {/* Tab 1: Beranda */}
-            <TouchableOpacity
-              style={styles.navItem}
-              activeOpacity={0.7}
-              onPress={() => handleTabPress("beranda")}
-            >
-              <Image
-                source={
-                  activeTab === "beranda"
-                    ? require("@/assets/icons/ic-nav-home-active.png")
-                    : require("@/assets/icons/ic-nav-home.png")
-                }
-                style={styles.navIconAsset}
-                resizeMode="contain"
-              />
-              <ThemedText
-                style={[
-                  styles.navLabel,
-                  activeTab === "beranda" && styles.navLabelActive,
-                ]}
-              >
-                Beranda
-              </ThemedText>
-            </TouchableOpacity>
-
-            {/* Tab 2: Layanan */}
-            <TouchableOpacity
-              style={styles.navItem}
-              activeOpacity={0.7}
-              onPress={() => handleTabPress("layanan")}
-            >
-              <Image
-                source={
-                  activeTab === "layanan"
-                    ? require("@/assets/icons/ic-nav-layanan-active.png")
-                    : require("@/assets/icons/ic-nav-layanan.png")
-                }
-                style={styles.navIconAsset}
-                resizeMode="contain"
-              />
-              <ThemedText
-                style={[
-                  styles.navLabel,
-                  activeTab === "layanan" && styles.navLabelActive,
-                ]}
-              >
-                Layanan
-              </ThemedText>
-            </TouchableOpacity>
-
-            {/* Floating Center AI Button Spacer */}
-            <View style={styles.centerFloatingSpacer} />
-
-            {/* Tab 3: Komunitas */}
-            <TouchableOpacity
-              style={styles.navItem}
-              activeOpacity={0.7}
-              onPress={() => handleTabPress("komunitas")}
-            >
-              <Image
-                source={
-                  activeTab === "komunitas"
-                    ? require("@/assets/icons/ic-nav-komunitas-active.png")
-                    : require("@/assets/icons/ic-nav-komunitas.png")
-                }
-                style={styles.navIconAsset}
-                resizeMode="contain"
-              />
-              <ThemedText
-                style={[
-                  styles.navLabel,
-                  activeTab === "komunitas" && styles.navLabelActive,
-                ]}
-              >
-                Komunitas
-              </ThemedText>
-            </TouchableOpacity>
-
-            {/* Tab 4: Profil */}
-            <TouchableOpacity
-              style={styles.navItem}
-              activeOpacity={0.7}
-              onPress={() => handleTabPress("profil")}
-            >
-              <Image
-                source={
-                  activeTab === "profil"
-                    ? require("@/assets/icons/ic-nav-profil-active.png")
-                    : require("@/assets/icons/ic-nav-profil.png")
-                }
-                style={styles.navIconAsset}
-                resizeMode="contain"
-              />
-              <ThemedText
-                style={[
-                  styles.navLabel,
-                  activeTab === "profil" && styles.navLabelActive,
-                ]}
-              >
-                Profil
-              </ThemedText>
-            </TouchableOpacity>
-          </View>
-
-          {/* Floating Sparkle AI Center Button Asset */}
-          <TouchableOpacity
-            style={styles.floatingAiButton}
-            activeOpacity={0.85}
-            onPress={handleAiSparklePress}
-          >
-            <Image
-              source={require("@/assets/icons/ic-nav-ai.png")}
-              style={styles.floatingAiAsset}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
         </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  bgImage: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+  },
   safeArea: {
     flex: 1,
-    backgroundColor: "#FAFCFE",
   },
   mainContainer: {
     flex: 1,
@@ -651,17 +671,17 @@ const styles = StyleSheet.create({
   heroPromptBox: {
     backgroundColor: Palette.blue[100],
     borderRadius: 16,
-    padding: 12,
     flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
+    alignItems: "flex-start",
     marginBottom: 12,
+    height: 70,
   },
   heroAiIconAsset: {
-    width: 38,
-    height: 38,
+    width: 70,
+    height: 120,
   },
   heroPromptTextGroup: {
+    paddingTop: 12,
     flex: 1,
   },
   heroPromptTitle: {
@@ -694,12 +714,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E6EDF8",
     height: 48,
-    paddingHorizontal: 12,
+    paddingHorizontal: 8,
+    gap: 8,
   },
   searchIconAsset: {
-    width: 20,
-    height: 20,
-    marginRight: 8,
+    width: 36,
+    height: 36,
   },
   searchInput: {
     flex: 1,
@@ -712,8 +732,8 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   micIconAsset: {
-    width: 24,
-    height: 24,
+    width: 50,
+    height: 100,
   },
 
   /* Feature 2x2 Grid */
@@ -819,12 +839,13 @@ const styles = StyleSheet.create({
     gap: 6,
     backgroundColor: "rgba(255, 255, 255, 0.92)",
     paddingVertical: 4,
-    paddingHorizontal: 10,
+    paddingLeft: 6,
+    paddingRight: 12,
     borderRadius: 20,
   },
   categoryIconAsset: {
-    width: 14,
-    height: 14,
+    width: 20,
+    height: 20,
   },
   categoryPillText: {
     fontFamily: Fonts.semiBold,
@@ -881,30 +902,30 @@ const styles = StyleSheet.create({
   emergencyCard: {
     backgroundColor: "#FFFFFF",
     borderRadius: 20,
-    borderWidth: 1.2,
-    borderColor: "#FEE2E2",
+    borderWidth: 1,
+    borderColor: "#F2F2F2",
     marginHorizontal: 20,
     padding: 14,
     shadowColor: Palette.brand.danger,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.05,
     shadowRadius: 10,
-    elevation: 2,
+    elevation: 1,
   },
   emergencyPromptBox: {
     backgroundColor: "#FEF2F2",
     borderRadius: 14,
-    padding: 12,
     flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
+    alignItems: "flex-start",
     marginBottom: 12,
+    height: 90,
   },
   emergencyIconAsset: {
-    width: 38,
-    height: 38,
+    width: 70,
+    height: 120,
   },
   emergencyTextGroup: {
+    paddingTop: 20,
     flex: 1,
   },
   emergencyPromptTitle: {
@@ -990,15 +1011,15 @@ const styles = StyleSheet.create({
   },
   floatingAiButton: {
     position: "absolute",
-    top: 0,
-    width: 60,
+    top: -20,
+    width: 100,
     height: 60,
     borderRadius: 30,
     alignItems: "center",
     justifyContent: "center",
   },
   floatingAiAsset: {
-    width: 60,
-    height: 60,
+    width: 75,
+    height: 75,
   },
 });

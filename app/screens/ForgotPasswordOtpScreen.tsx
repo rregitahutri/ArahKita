@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   Alert,
   Image,
+  ImageBackground,
   KeyboardAvoidingView,
   NativeSyntheticEvent,
   Platform,
@@ -60,12 +61,10 @@ export default function ForgotPasswordOtpScreen({
 
   const handleOtpChange = (text: string, index: number) => {
     const newOtp = [...otp];
-    // Take only the last entered character if multiple typed
     const digit = text.slice(-1);
     newOtp[index] = digit;
     setOtp(newOtp);
 
-    // Auto advance focus to next input
     if (digit !== "" && index < 3) {
       inputRefs[index + 1].current?.focus();
     }
@@ -75,7 +74,6 @@ export default function ForgotPasswordOtpScreen({
     e: NativeSyntheticEvent<TextInputKeyPressEventData>,
     index: number,
   ) => {
-    // Auto retreat focus on backspace
     if (e.nativeEvent.key === "Backspace" && otp[index] === "" && index > 0) {
       inputRefs[index - 1].current?.focus();
     }
@@ -86,7 +84,7 @@ export default function ForgotPasswordOtpScreen({
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setTimer(30);
     Alert.alert(
-      "Kode Dikirsim",
+      "Kode Dikirim",
       `Kode verifikasi baru telah dikirimkan ke ${email}`,
     );
   };
@@ -116,150 +114,160 @@ export default function ForgotPasswordOtpScreen({
   };
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={["top", "left", "right"]}>
-      <KeyboardAvoidingView
-        style={styles.keyboardView}
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-      >
-        <ScrollView
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
+    <ImageBackground
+      source={require("@/assets/images/bg-forgot-password.png")}
+      style={styles.bgImage}
+      resizeMode="cover"
+    >
+      <SafeAreaView style={styles.safeArea} edges={["top", "left", "right"]}>
+        <KeyboardAvoidingView
+          style={styles.keyboardView}
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
         >
-          {/* Header Bar */}
-          <View style={styles.navHeader}>
-            <TouchableOpacity
-              style={styles.backButton}
-              activeOpacity={0.7}
-              onPress={handleBackPress}
-            >
-              <Ionicons
-                name="chevron-back"
-                size={22}
-                color={Palette.text.active}
-              />
-            </TouchableOpacity>
-
-            <ThemedText style={styles.screenTitle}>Lupa Sandi</ThemedText>
-
-            <View style={styles.headerSpacer} />
-          </View>
-
-          {/* AI Voice Assistant Card */}
-          <View style={styles.assistantCard}>
-            <View style={styles.greetingBox}>
-              <ThemedText style={styles.greetingTitle}>
-                Verifikasi Emailmu
-              </ThemedText>
-              <ThemedText style={styles.greetingSubtitle}>
-                Kami telah mengirimkan kode verifikasi, silakan masukkan kode
-                tersebut di bawah ini.
-              </ThemedText>
-            </View>
-
-            {/* Voice Waveform */}
-            <View style={styles.waveContainer}>
-              <Image
-                source={require("@/assets/icons/ic-onboarding-voice.png")}
-                style={styles.waveformImage}
-                resizeMode="contain"
-              />
-            </View>
-
-            {/* Microphone Button */}
-            <TouchableOpacity
-              style={[
-                styles.micWrapper,
-                isListening && styles.micWrapperActive,
-              ]}
-              activeOpacity={0.8}
-              onPress={handleMicPress}
-            >
-              <Image
-                source={require("@/assets/icons/ic-onboarding-mic.png")}
-                style={styles.micImage}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-          </View>
-
-          {/* Form Section */}
-          <View style={styles.formContainer}>
-            <ThemedText style={styles.label}>Kode Verifikasi</ThemedText>
-
-            {/* 4 OTP Box Input Fields */}
-            <View style={styles.otpRow}>
-              {otp.map((digit, index) => (
-                <TextInput
-                  key={index}
-                  ref={inputRefs[index]}
-                  style={[styles.otpBox, digit !== "" && styles.otpBoxFilled]}
-                  value={digit}
-                  onChangeText={(text) => handleOtpChange(text, index)}
-                  onKeyPress={(e) => handleKeyPress(e, index)}
-                  keyboardType="number-pad"
-                  maxLength={1}
-                  selectTextOnFocus
-                />
-              ))}
-            </View>
-
-            {/* Below OTP Row Links (Timer / Resend & Help) */}
-            <View style={styles.otpFooterRow}>
+          <ScrollView
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+          >
+            {/* Header Bar */}
+            <View style={styles.navHeader}>
               <TouchableOpacity
-                onPress={handleResendCode}
-                disabled={timer > 0}
+                style={styles.backButton}
                 activeOpacity={0.7}
+                onPress={handleBackPress}
               >
-                <ThemedText style={styles.timerText}>
-                  {timer > 0 ? `${timer} s ` : ""}
-                  <ThemedText
-                    style={[
-                      styles.resendLink,
-                      timer > 0 && styles.resendLinkDisabled,
-                    ]}
-                  >
-                    Kirim ulang kode
-                  </ThemedText>
-                </ThemedText>
+                <Ionicons
+                  name="chevron-back"
+                  size={22}
+                  color={Palette.text.active}
+                />
               </TouchableOpacity>
 
-              <TouchableOpacity onPress={handleHelpPress} activeOpacity={0.7}>
-                <ThemedText style={styles.helpLink}>
-                  Mengalami kesulitan?
+              <ThemedText style={styles.screenTitle}>Lupa Sandi</ThemedText>
+
+              <View style={styles.headerSpacer} />
+            </View>
+
+            {/* AI Voice Assistant Card */}
+            <View style={styles.assistantCard}>
+              <View style={styles.greetingBox}>
+                <ThemedText style={styles.greetingTitle}>
+                  Verifikasi Emailmu
                 </ThemedText>
+                <ThemedText style={styles.greetingSubtitle}>
+                  Kami telah mengirimkan kode verifikasi, silakan masukkan kode
+                  tersebut di bawah ini.
+                </ThemedText>
+              </View>
+
+              {/* Voice Waveform */}
+              <View style={styles.waveContainer}>
+                <Image
+                  source={require("@/assets/icons/ic-onboarding-voice.png")}
+                  style={styles.waveformImage}
+                  resizeMode="contain"
+                />
+              </View>
+
+              {/* Microphone Button */}
+              <TouchableOpacity
+                style={[
+                  styles.micWrapper,
+                  isListening && styles.micWrapperActive,
+                ]}
+                activeOpacity={0.8}
+                onPress={handleMicPress}
+              >
+                <Image
+                  source={require("@/assets/icons/ic-onboarding-mic.png")}
+                  style={styles.micImage}
+                  resizeMode="contain"
+                />
               </TouchableOpacity>
             </View>
 
-            {/* Next Button */}
-            <TouchableOpacity
-              style={[
-                styles.primaryButton,
-                {
-                  backgroundColor: isOtpComplete
-                    ? Palette.button.primary
-                    : Palette.button.second,
-                },
-              ]}
-              disabled={!isOtpComplete}
-              onPress={handleNextPress}
-              activeOpacity={isOtpComplete ? 0.85 : 1}
-            >
-              <ThemedText style={styles.primaryButtonText}>
-                Selanjutnya
-              </ThemedText>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+            {/* Form Section */}
+            <View style={styles.formContainer}>
+              <ThemedText style={styles.label}>Kode Verifikasi</ThemedText>
+
+              {/* 4 OTP Box Input Fields */}
+              <View style={styles.otpRow}>
+                {otp.map((digit, index) => (
+                  <TextInput
+                    key={index}
+                    ref={inputRefs[index]}
+                    style={[styles.otpBox, digit !== "" && styles.otpBoxFilled]}
+                    value={digit}
+                    onChangeText={(text) => handleOtpChange(text, index)}
+                    onKeyPress={(e) => handleKeyPress(e, index)}
+                    keyboardType="number-pad"
+                    maxLength={1}
+                    selectTextOnFocus
+                  />
+                ))}
+              </View>
+
+              {/* Below OTP Row Links (Timer / Resend & Help) */}
+              <View style={styles.otpFooterRow}>
+                <TouchableOpacity
+                  onPress={handleResendCode}
+                  disabled={timer > 0}
+                  activeOpacity={0.7}
+                >
+                  <ThemedText style={styles.timerText}>
+                    {timer > 0 ? `${timer} s ` : ""}
+                    <ThemedText
+                      style={[
+                        styles.resendLink,
+                        timer > 0 && styles.resendLinkDisabled,
+                      ]}
+                    >
+                      Kirim ulang kode
+                    </ThemedText>
+                  </ThemedText>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={handleHelpPress} activeOpacity={0.7}>
+                  <ThemedText style={styles.helpLink}>
+                    Mengalami kesulitan?
+                  </ThemedText>
+                </TouchableOpacity>
+              </View>
+
+              {/* Next Button */}
+              <TouchableOpacity
+                style={[
+                  styles.primaryButton,
+                  {
+                    backgroundColor: isOtpComplete
+                      ? Palette.button.primary
+                      : Palette.button.second,
+                  },
+                ]}
+                disabled={!isOtpComplete}
+                onPress={handleNextPress}
+                activeOpacity={isOtpComplete ? 0.85 : 1}
+              >
+                <ThemedText style={styles.primaryButtonText}>
+                  Selanjutnya
+                </ThemedText>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  bgImage: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+  },
   safeArea: {
     flex: 1,
-    backgroundColor: "#FAFCFE",
   },
   keyboardView: {
     flex: 1,
