@@ -83,9 +83,13 @@ const NEARBY_SERVICES: NearbyServiceItem[] = [
 
 interface HomeScreenProps {
   onNavigateToTab?: (tabName: string) => void;
+  onOpenNotification?: () => void;
 }
 
-export default function HomeScreen({ onNavigateToTab }: HomeScreenProps) {
+export default function HomeScreen({
+  onNavigateToTab,
+  onOpenNotification,
+}: HomeScreenProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState<
     "beranda" | "layanan" | "komunitas" | "profil"
@@ -105,7 +109,11 @@ export default function HomeScreen({ onNavigateToTab }: HomeScreenProps) {
 
   const handleNotificationPress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    Alert.alert("Notifikasi", "Belum ada notifikasi baru saat ini.");
+    if (onOpenNotification) {
+      onOpenNotification();
+    } else {
+      Alert.alert("Notifikasi", "Belum ada notifikasi baru saat ini.");
+    }
   };
 
   const handleEmergencyCall = () => {
