@@ -21,12 +21,14 @@ export interface ProfileScreenProps {
   ) => void;
   onOpenSettings?: () => void;
   onOpenNotification?: () => void;
+  onEditProfile?: () => void;
 }
 
 export default function ProfileScreen({
   onNavigateToTab,
   onOpenSettings,
   onOpenNotification,
+  onEditProfile,
 }: ProfileScreenProps) {
   const handleTabPress = (
     tab: "beranda" | "layanan" | "komunitas" | "profil",
@@ -47,7 +49,11 @@ export default function ProfileScreen({
 
   const handleEditProfile = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    Alert.alert("Edit Profil", "Membuka formulir pengeditan profil.");
+    if (onEditProfile) {
+      onEditProfile();
+    } else {
+      Alert.alert("Edit Profil", "Membuka formulir pengeditan profil.");
+    }
   };
 
   const handleAddFriends = () => {
