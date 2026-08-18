@@ -1,12 +1,29 @@
 import React, { useState } from "react";
 
+import DigitalAssistantScreen from "@/app/screens/DigitalAssistantScreen";
 import EditProfileScreen from "@/app/screens/EditProfileScreen";
 import EmergencyScreen from "@/app/screens/EmergencyScreen";
 import HomeScreen from "@/app/screens/HomeScreen";
 import NotificationScreen from "@/app/screens/NotificationScreen";
 import ProfileScreen from "@/app/screens/ProfileScreen";
 
-type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15;
+type Step =
+  | 1
+  | 2
+  | 3
+  | 4
+  | 5
+  | 6
+  | 7
+  | 8
+  | 9
+  | 10
+  | 11
+  | 12
+  | 13
+  | 14
+  | 15
+  | 16;
 type PreferenceType = "visual" | "hearing";
 
 export default function AppFlow() {
@@ -37,7 +54,7 @@ export default function AppFlow() {
     setForgotPasswordOtp("");
   };
 
-  // // Step 1: Splash Screen
+  // Step 1: Splash Screen
   // if (step === 1) {
   //   return <SplashScreen onFinish={() => setStep(2)} />;
   // }
@@ -210,6 +227,7 @@ export default function AppFlow() {
       <HomeScreen
         onOpenNotification={() => setStep(12)}
         onOpenEmergency={() => setStep(15)}
+        onOpenDigitalAssistant={() => setStep(16)}
         onNavigateToTab={(tab) => {
           if (tab === "profil") {
             setStep(13);
@@ -245,5 +263,10 @@ export default function AppFlow() {
   }
 
   // Step 15: Emergency Screen
-  return <EmergencyScreen onBack={() => setStep(11)} />;
+  if (step === 15) {
+    return <EmergencyScreen onBack={() => setStep(11)} />;
+  }
+
+  // Step 16: Digital Assistant Screen
+  return <DigitalAssistantScreen onBack={() => setStep(11)} />;
 }

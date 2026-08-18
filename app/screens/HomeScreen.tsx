@@ -85,12 +85,14 @@ interface HomeScreenProps {
   onNavigateToTab?: (tabName: string) => void;
   onOpenNotification?: () => void;
   onOpenEmergency?: () => void;
+  onOpenDigitalAssistant?: () => void;
 }
 
 export default function HomeScreen({
   onNavigateToTab,
   onOpenNotification,
   onOpenEmergency,
+  onOpenDigitalAssistant,
 }: HomeScreenProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState<
@@ -154,10 +156,14 @@ export default function HomeScreen({
 
   const handleAiSparklePress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-    Alert.alert(
-      "Asisten AI ArahKita",
-      "Halo! Saya Asisten AI ArahKita. Ada yang bisa saya bantu hari ini?",
-    );
+    if (onOpenDigitalAssistant) {
+      onOpenDigitalAssistant();
+    } else {
+      Alert.alert(
+        "Asisten AI ArahKita",
+        "Halo! Saya Asisten AI ArahKita. Ada yang bisa saya bantu hari ini?",
+      );
+    }
   };
 
   return (
