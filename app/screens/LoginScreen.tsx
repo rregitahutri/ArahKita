@@ -21,12 +21,14 @@ interface LoginScreenProps {
   onBack: () => void;
   onRegister?: () => void;
   onForgotPassword?: () => void;
+  onLoginSuccess?: () => void;
 }
 
 export default function LoginScreen({
   onBack,
   onRegister,
   onForgotPassword,
+  onLoginSuccess,
 }: LoginScreenProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -60,17 +62,29 @@ export default function LoginScreen({
   const handleLogin = () => {
     if (!isFormValid) return;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    Alert.alert("Sukses", `Login berhasil dengan email: ${email}`);
+    if (onLoginSuccess) {
+      onLoginSuccess();
+    } else {
+      Alert.alert("Sukses", `Login berhasil dengan email: ${email}`);
+    }
   };
 
   const handleGoogleLogin = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    Alert.alert("Google Sign-In", "Melanjutkan dengan akun Google...");
+    if (onLoginSuccess) {
+      onLoginSuccess();
+    } else {
+      Alert.alert("Google Sign-In", "Melanjutkan dengan akun Google...");
+    }
   };
 
   const handleFacebookLogin = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    Alert.alert("Facebook Sign-In", "Melanjutkan dengan akun Facebook...");
+    if (onLoginSuccess) {
+      onLoginSuccess();
+    } else {
+      Alert.alert("Facebook Sign-In", "Melanjutkan dengan akun Facebook...");
+    }
   };
 
   const handleForgotPasswordPress = () => {
@@ -288,7 +302,7 @@ export default function LoginScreen({
               </ThemedText>
             </TouchableOpacity>
 
-            {/* Login Button (Disabled when form is invalid/incomplete) */}
+            {/* Login Button */}
             <TouchableOpacity
               style={[
                 styles.primaryButton,
