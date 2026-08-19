@@ -274,12 +274,7 @@ export default function HomeScreen({
               <TouchableOpacity
                 style={styles.featureCard}
                 activeOpacity={0.8}
-                onPress={() =>
-                  Alert.alert(
-                    "Layanan Publik",
-                    "Membuka daftar fasilitas publik ramah difabel terdekat.",
-                  )
-                }
+                onPress={() => handleTabPress("layanan")}
               >
                 <Image
                   source={require("@/assets/icons/ic-homepage-public-services.png")}

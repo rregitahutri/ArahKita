@@ -7,6 +7,7 @@ import EmergencyScreen from "@/app/screens/EmergencyScreen";
 import HomeScreen from "@/app/screens/HomeScreen";
 import NotificationScreen from "@/app/screens/NotificationScreen";
 import ProfileScreen from "@/app/screens/ProfileScreen";
+import ServicesScreen from "@/app/screens/ServicesScreen";
 import VoiceAssistantScreen from "@/app/screens/VoiceAssistantScreen";
 
 type Step =
@@ -27,7 +28,8 @@ type Step =
   | 15
   | 16
   | 17
-  | 18;
+  | 18
+  | 19;
 type PreferenceType = "visual" | "hearing";
 
 export default function AppFlow() {
@@ -235,6 +237,8 @@ export default function AppFlow() {
         onNavigateToTab={(tab) => {
           if (tab === "profil") {
             setStep(13);
+          } else if (tab === "layanan") {
+            setStep(19);
           }
         }}
       />
@@ -253,6 +257,8 @@ export default function AppFlow() {
         onNavigateToTab={(tab) => {
           if (tab === "beranda") {
             setStep(11);
+          } else if (tab === "layanan") {
+            setStep(19);
           }
         }}
         onOpenNotification={() => setStep(12)}
@@ -288,10 +294,28 @@ export default function AppFlow() {
   }
 
   // Step 18: Chatbot Screen
+  if (step === 18) {
+    return (
+      <ChatbotScreen
+        onBack={() => setStep(16)}
+        onNavigateToVoiceAssistant={() => setStep(17)}
+      />
+    );
+  }
+
+  // Step 19: Services Screen
   return (
-    <ChatbotScreen
-      onBack={() => setStep(16)}
-      onNavigateToVoiceAssistant={() => setStep(17)}
+    <ServicesScreen
+      onOpenNotification={() => setStep(12)}
+      onOpenEmergency={() => setStep(15)}
+      onOpenDigitalAssistant={() => setStep(16)}
+      onNavigateToTab={(tab) => {
+        if (tab === "beranda") {
+          setStep(11);
+        } else if (tab === "profil") {
+          setStep(13);
+        }
+      }}
     />
   );
 }
