@@ -216,7 +216,7 @@ export default function VoiceAssistantScreen({
                     source={
                       voiceStep === 2
                         ? require("@/assets/icons/ic-ai-voice.png")
-                        : require("@/assets/icons/ic-ai-illustration.png")
+                        : require("@/assets/icons/ic-ai-logo.png")
                     }
                     style={
                       voiceStep === 2

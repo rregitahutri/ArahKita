@@ -19,11 +19,13 @@ import { Fonts, Palette } from "@/constants/theme";
 export interface DigitalAssistantScreenProps {
   onBack?: () => void;
   onOpenVoiceAssistant?: () => void;
+  onOpenChatbot?: () => void;
 }
 
 export default function DigitalAssistantScreen({
   onBack,
   onOpenVoiceAssistant,
+  onOpenChatbot,
 }: DigitalAssistantScreenProps) {
   const pulseAnim1 = useRef(new Animated.Value(1)).current;
   const pulseRingAnim1 = useRef(new Animated.Value(1)).current;
@@ -111,10 +113,14 @@ export default function DigitalAssistantScreen({
 
   const handleChatbotPress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    Alert.alert(
-      "Chatbot ArahKita",
-      "Membuka percakapan percakapan teks dengan AI Chatbot.",
-    );
+    if (onOpenChatbot) {
+      onOpenChatbot();
+    } else {
+      Alert.alert(
+        "Chatbot ArahKita",
+        "Membuka percakapan percakapan teks dengan AI Chatbot.",
+      );
+    }
   };
 
   const handleVoiceAssistantPress = () => {

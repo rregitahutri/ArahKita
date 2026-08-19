@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import ChatbotScreen from "@/app/screens/ChatbotScreen";
 import DigitalAssistantScreen from "@/app/screens/DigitalAssistantScreen";
 import EditProfileScreen from "@/app/screens/EditProfileScreen";
 import EmergencyScreen from "@/app/screens/EmergencyScreen";
@@ -25,7 +26,8 @@ type Step =
   | 14
   | 15
   | 16
-  | 17;
+  | 17
+  | 18;
 type PreferenceType = "visual" | "hearing";
 
 export default function AppFlow() {
@@ -56,7 +58,7 @@ export default function AppFlow() {
     setForgotPasswordOtp("");
   };
 
-  // // Step 1: Splash Screen
+  // Step 1: Splash Screen
   // if (step === 1) {
   //   return <SplashScreen onFinish={() => setStep(2)} />;
   // }
@@ -275,10 +277,21 @@ export default function AppFlow() {
       <DigitalAssistantScreen
         onBack={() => setStep(11)}
         onOpenVoiceAssistant={() => setStep(17)}
+        onOpenChatbot={() => setStep(18)}
       />
     );
   }
 
-  // Step 17: Voice Assistant Flow Screens (Auto Step 1 -> 2 -> 3)
-  return <VoiceAssistantScreen onBack={() => setStep(16)} />;
+  // Step 17: Voice Assistant Flow Screens
+  if (step === 17) {
+    return <VoiceAssistantScreen onBack={() => setStep(16)} />;
+  }
+
+  // Step 18: Chatbot Screen
+  return (
+    <ChatbotScreen
+      onBack={() => setStep(16)}
+      onNavigateToVoiceAssistant={() => setStep(17)}
+    />
+  );
 }
