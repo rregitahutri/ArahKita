@@ -6,6 +6,7 @@ import EmergencyScreen from "@/app/screens/EmergencyScreen";
 import HomeScreen from "@/app/screens/HomeScreen";
 import NotificationScreen from "@/app/screens/NotificationScreen";
 import ProfileScreen from "@/app/screens/ProfileScreen";
+import VoiceAssistantScreen from "@/app/screens/VoiceAssistantScreen";
 
 type Step =
   | 1
@@ -23,7 +24,8 @@ type Step =
   | 13
   | 14
   | 15
-  | 16;
+  | 16
+  | 17;
 type PreferenceType = "visual" | "hearing";
 
 export default function AppFlow() {
@@ -54,7 +56,7 @@ export default function AppFlow() {
     setForgotPasswordOtp("");
   };
 
-  // Step 1: Splash Screen
+  // // Step 1: Splash Screen
   // if (step === 1) {
   //   return <SplashScreen onFinish={() => setStep(2)} />;
   // }
@@ -268,5 +270,15 @@ export default function AppFlow() {
   }
 
   // Step 16: Digital Assistant Screen
-  return <DigitalAssistantScreen onBack={() => setStep(11)} />;
+  if (step === 16) {
+    return (
+      <DigitalAssistantScreen
+        onBack={() => setStep(11)}
+        onOpenVoiceAssistant={() => setStep(17)}
+      />
+    );
+  }
+
+  // Step 17: Voice Assistant Flow Screens (Auto Step 1 -> 2 -> 3)
+  return <VoiceAssistantScreen onBack={() => setStep(16)} />;
 }

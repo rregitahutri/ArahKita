@@ -18,10 +18,12 @@ import { Fonts, Palette } from "@/constants/theme";
 
 export interface DigitalAssistantScreenProps {
   onBack?: () => void;
+  onOpenVoiceAssistant?: () => void;
 }
 
 export default function DigitalAssistantScreen({
   onBack,
+  onOpenVoiceAssistant,
 }: DigitalAssistantScreenProps) {
   const pulseAnim1 = useRef(new Animated.Value(1)).current;
   const pulseRingAnim1 = useRef(new Animated.Value(1)).current;
@@ -117,10 +119,14 @@ export default function DigitalAssistantScreen({
 
   const handleVoiceAssistantPress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    Alert.alert(
-      "Asisten Suara",
-      "Mendengarkan... Silakan sebutkan perintah suara Anda.",
-    );
+    if (onOpenVoiceAssistant) {
+      onOpenVoiceAssistant();
+    } else {
+      Alert.alert(
+        "Asisten Suara",
+        "Mendengarkan... Silakan sebutkan perintah suara Anda.",
+      );
+    }
   };
 
   return (
