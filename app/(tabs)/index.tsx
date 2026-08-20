@@ -6,6 +6,7 @@ import DigitalAssistantScreen from "@/app/screens/DigitalAssistantScreen";
 import EditProfileScreen from "@/app/screens/EditProfileScreen";
 import EmergencyScreen from "@/app/screens/EmergencyScreen";
 import HomeScreen from "@/app/screens/HomeScreen";
+import NewPostScreen from "@/app/screens/NewPostScreen";
 import NotificationScreen from "@/app/screens/NotificationScreen";
 import ProfileScreen from "@/app/screens/ProfileScreen";
 import ServiceDetailScreen from "@/app/screens/ServiceDetailScreen";
@@ -35,7 +36,8 @@ type Step =
   | 19
   | 20
   | 21
-  | 22;
+  | 22
+  | 23;
 type PreferenceType = "visual" | "hearing";
 
 export default function AppFlow() {
@@ -382,21 +384,32 @@ export default function AppFlow() {
   }
 
   // Step 22: Community Screen
+  if (step === 22) {
+    return (
+      <CommunityScreen
+        onOpenNotification={() => setStep(12)}
+        onOpenEmergency={() => setStep(15)}
+        onOpenDigitalAssistant={() => setStep(16)}
+        onOpenServiceDetail={() => setStep(21)}
+        onOpenNewPost={() => setStep(23)}
+        onNavigateToTab={(tab) => {
+          if (tab === "beranda") {
+            setStep(11);
+          } else if (tab === "layanan") {
+            setStep(19);
+          } else if (tab === "profil") {
+            setStep(13);
+          }
+        }}
+      />
+    );
+  }
+
+  // Step 23: New Post Screen
   return (
-    <CommunityScreen
-      onOpenNotification={() => setStep(12)}
-      onOpenEmergency={() => setStep(15)}
-      onOpenDigitalAssistant={() => setStep(16)}
-      onOpenServiceDetail={() => setStep(21)}
-      onNavigateToTab={(tab) => {
-        if (tab === "beranda") {
-          setStep(11);
-        } else if (tab === "layanan") {
-          setStep(19);
-        } else if (tab === "profil") {
-          setStep(13);
-        }
-      }}
+    <NewPostScreen
+      onBack={() => setStep(22)}
+      onPostSuccess={() => setStep(22)}
     />
   );
 }

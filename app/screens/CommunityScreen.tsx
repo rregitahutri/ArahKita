@@ -22,6 +22,7 @@ export interface CommunityScreenProps {
   onOpenEmergency?: () => void;
   onOpenDigitalAssistant?: () => void;
   onOpenServiceDetail?: () => void;
+  onOpenNewPost?: () => void;
 }
 
 export default function CommunityScreen({
@@ -30,8 +31,21 @@ export default function CommunityScreen({
   onOpenEmergency,
   onOpenDigitalAssistant,
   onOpenServiceDetail,
+  onOpenNewPost,
 }: CommunityScreenProps) {
   const [searchQuery, setSearchQuery] = useState("");
+
+  const handleNewPostPress = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    if (onOpenNewPost) {
+      onOpenNewPost();
+    } else {
+      Alert.alert(
+        "Postingan Baru",
+        "Membuka formulir membuat postingan komunitas.",
+      );
+    }
+  };
   const [activeFilter, setActiveFilter] = useState<
     "semua" | "cerita" | "infotempat" | "tanyakan"
   >("semua");
@@ -238,12 +252,7 @@ export default function CommunityScreen({
                 <TouchableOpacity
                   style={styles.primaryActionButton}
                   activeOpacity={0.85}
-                  onPress={() =>
-                    Alert.alert(
-                      "Postingan Baru",
-                      "Membuka formulir membuat postingan komunitas.",
-                    )
-                  }
+                  onPress={handleNewPostPress}
                 >
                   <Image
                     source={require("@/assets/icons/ic-commun-new-post.png")}
