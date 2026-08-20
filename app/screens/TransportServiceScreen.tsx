@@ -22,6 +22,7 @@ export interface TransportServiceScreenProps {
   onOpenNotification?: () => void;
   onOpenEmergency?: () => void;
   onOpenDigitalAssistant?: () => void;
+  onOpenDetail?: () => void;
 }
 
 export default function TransportServiceScreen({
@@ -30,9 +31,19 @@ export default function TransportServiceScreen({
   onOpenNotification,
   onOpenEmergency,
   onOpenDigitalAssistant,
+  onOpenDetail,
 }: TransportServiceScreenProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [isListening, setIsListening] = useState(false);
+
+  const handleCardDetailPress = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    if (onOpenDetail) {
+      onOpenDetail();
+    } else {
+      Alert.alert("Detail", "Membuka detail Stasiun MRT Fatmawati.");
+    }
+  };
 
   const handleBackPress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -124,10 +135,10 @@ export default function TransportServiceScreen({
                 </View>
                 <View style={styles.aiPromptTextGroup}>
                   <ThemedText style={styles.aiPromptTitle}>
-                    Layanan apa yang kamu cari?
+                    Transportasi apa yang kamu cari?
                   </ThemedText>
                   <ThemedText style={styles.aiPromptSub}>
-                    Cari layanan terdekatmu sekarang.
+                    Cari halte, stasiun MRT, atau stasiun KRL.
                   </ThemedText>
                 </View>
                 <Image
@@ -196,7 +207,7 @@ export default function TransportServiceScreen({
               <TouchableOpacity
                 style={styles.nearbyCard}
                 activeOpacity={0.9}
-                onPress={handleOpenMap}
+                onPress={handleCardDetailPress}
               >
                 <View style={styles.cardImageWrapper}>
                   <Image

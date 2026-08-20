@@ -7,6 +7,7 @@ import EmergencyScreen from "@/app/screens/EmergencyScreen";
 import HomeScreen from "@/app/screens/HomeScreen";
 import NotificationScreen from "@/app/screens/NotificationScreen";
 import ProfileScreen from "@/app/screens/ProfileScreen";
+import ServiceDetailScreen from "@/app/screens/ServiceDetailScreen";
 import ServicesScreen from "@/app/screens/ServicesScreen";
 import TransportServiceScreen from "@/app/screens/TransportServiceScreen";
 import VoiceAssistantScreen from "@/app/screens/VoiceAssistantScreen";
@@ -31,7 +32,8 @@ type Step =
   | 17
   | 18
   | 19
-  | 20;
+  | 20
+  | 21;
 type PreferenceType = "visual" | "hearing";
 
 export default function AppFlow() {
@@ -325,9 +327,31 @@ export default function AppFlow() {
   }
 
   // Step 20: Transport Service Screen
+  if (step === 20) {
+    return (
+      <TransportServiceScreen
+        onBack={() => setStep(19)}
+        onOpenNotification={() => setStep(12)}
+        onOpenEmergency={() => setStep(15)}
+        onOpenDigitalAssistant={() => setStep(16)}
+        onOpenDetail={() => setStep(21)}
+        onNavigateToTab={(tab) => {
+          if (tab === "beranda") {
+            setStep(11);
+          } else if (tab === "layanan") {
+            setStep(19);
+          } else if (tab === "profil") {
+            setStep(13);
+          }
+        }}
+      />
+    );
+  }
+
+  // Step 21: Service Detail Screen (Stasiun MRT Fatmawati)
   return (
-    <TransportServiceScreen
-      onBack={() => setStep(19)}
+    <ServiceDetailScreen
+      onBack={() => setStep(20)}
       onOpenNotification={() => setStep(12)}
       onOpenEmergency={() => setStep(15)}
       onOpenDigitalAssistant={() => setStep(16)}
