@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import ChatbotScreen from "@/app/screens/ChatbotScreen";
+import CommunityScreen from "@/app/screens/CommunityScreen";
 import DigitalAssistantScreen from "@/app/screens/DigitalAssistantScreen";
 import EditProfileScreen from "@/app/screens/EditProfileScreen";
 import EmergencyScreen from "@/app/screens/EmergencyScreen";
@@ -33,7 +34,8 @@ type Step =
   | 18
   | 19
   | 20
-  | 21;
+  | 21
+  | 22;
 type PreferenceType = "visual" | "hearing";
 
 export default function AppFlow() {
@@ -243,6 +245,8 @@ export default function AppFlow() {
             setStep(13);
           } else if (tab === "layanan") {
             setStep(19);
+          } else if (tab === "komunitas") {
+            setStep(22);
           }
         }}
       />
@@ -263,6 +267,8 @@ export default function AppFlow() {
             setStep(11);
           } else if (tab === "layanan") {
             setStep(19);
+          } else if (tab === "komunitas") {
+            setStep(22);
           }
         }}
         onOpenNotification={() => setStep(12)}
@@ -320,6 +326,8 @@ export default function AppFlow() {
             setStep(11);
           } else if (tab === "profil") {
             setStep(13);
+          } else if (tab === "komunitas") {
+            setStep(22);
           }
         }}
       />
@@ -342,6 +350,8 @@ export default function AppFlow() {
             setStep(19);
           } else if (tab === "profil") {
             setStep(13);
+          } else if (tab === "komunitas") {
+            setStep(22);
           }
         }}
       />
@@ -349,12 +359,35 @@ export default function AppFlow() {
   }
 
   // Step 21: Service Detail Screen (Stasiun MRT Fatmawati)
+  if (step === 21) {
+    return (
+      <ServiceDetailScreen
+        onBack={() => setStep(20)}
+        onOpenNotification={() => setStep(12)}
+        onOpenEmergency={() => setStep(15)}
+        onOpenDigitalAssistant={() => setStep(16)}
+        onNavigateToTab={(tab) => {
+          if (tab === "beranda") {
+            setStep(11);
+          } else if (tab === "layanan") {
+            setStep(19);
+          } else if (tab === "profil") {
+            setStep(13);
+          } else if (tab === "komunitas") {
+            setStep(22);
+          }
+        }}
+      />
+    );
+  }
+
+  // Step 22: Community Screen
   return (
-    <ServiceDetailScreen
-      onBack={() => setStep(20)}
+    <CommunityScreen
       onOpenNotification={() => setStep(12)}
       onOpenEmergency={() => setStep(15)}
       onOpenDigitalAssistant={() => setStep(16)}
+      onOpenServiceDetail={() => setStep(21)}
       onNavigateToTab={(tab) => {
         if (tab === "beranda") {
           setStep(11);
