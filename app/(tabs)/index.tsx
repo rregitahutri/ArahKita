@@ -8,6 +8,7 @@ import HomeScreen from "@/app/screens/HomeScreen";
 import NotificationScreen from "@/app/screens/NotificationScreen";
 import ProfileScreen from "@/app/screens/ProfileScreen";
 import ServicesScreen from "@/app/screens/ServicesScreen";
+import TransportServiceScreen from "@/app/screens/TransportServiceScreen";
 import VoiceAssistantScreen from "@/app/screens/VoiceAssistantScreen";
 
 type Step =
@@ -29,7 +30,8 @@ type Step =
   | 16
   | 17
   | 18
-  | 19;
+  | 19
+  | 20;
 type PreferenceType = "visual" | "hearing";
 
 export default function AppFlow() {
@@ -304,14 +306,36 @@ export default function AppFlow() {
   }
 
   // Step 19: Services Screen
+  if (step === 19) {
+    return (
+      <ServicesScreen
+        onOpenNotification={() => setStep(12)}
+        onOpenEmergency={() => setStep(15)}
+        onOpenDigitalAssistant={() => setStep(16)}
+        onOpenTransportService={() => setStep(20)}
+        onNavigateToTab={(tab) => {
+          if (tab === "beranda") {
+            setStep(11);
+          } else if (tab === "profil") {
+            setStep(13);
+          }
+        }}
+      />
+    );
+  }
+
+  // Step 20: Transport Service Screen
   return (
-    <ServicesScreen
+    <TransportServiceScreen
+      onBack={() => setStep(19)}
       onOpenNotification={() => setStep(12)}
       onOpenEmergency={() => setStep(15)}
       onOpenDigitalAssistant={() => setStep(16)}
       onNavigateToTab={(tab) => {
         if (tab === "beranda") {
           setStep(11);
+        } else if (tab === "layanan") {
+          setStep(19);
         } else if (tab === "profil") {
           setStep(13);
         }

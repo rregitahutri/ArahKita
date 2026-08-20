@@ -16,26 +16,32 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ThemedText } from "@/components/themed-text";
 import { Fonts, Palette } from "@/constants/theme";
 
-export interface ServicesScreenProps {
+export interface TransportServiceScreenProps {
+  onBack?: () => void;
   onNavigateToTab?: (tabName: string) => void;
   onOpenNotification?: () => void;
   onOpenEmergency?: () => void;
   onOpenDigitalAssistant?: () => void;
-  onOpenTransportService?: () => void;
 }
 
-export default function ServicesScreen({
+export default function TransportServiceScreen({
+  onBack,
   onNavigateToTab,
   onOpenNotification,
   onOpenEmergency,
   onOpenDigitalAssistant,
-  onOpenTransportService,
-}: ServicesScreenProps) {
+}: TransportServiceScreenProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState<
-    "beranda" | "layanan" | "komunitas" | "profil"
-  >("layanan");
   const [isListening, setIsListening] = useState(false);
+
+  const handleBackPress = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    if (onBack) {
+      onBack();
+    } else {
+      Alert.alert("Kembali", "Kembali ke halaman sebelumnya.");
+    }
+  };
 
   const handleMicSearch = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -44,37 +50,16 @@ export default function ServicesScreen({
       "Asisten Suara",
       isListening
         ? "Mencoba menghentikan pencarian suara..."
-        : "Mendengarkan... Silakan sebutkan layanan yang Anda cari.",
+        : "Mendengarkan... Silakan sebutkan halte atau stasiun yang Anda cari.",
     );
-  };
-
-  const handleNotificationPress = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    if (onOpenNotification) {
-      onOpenNotification();
-    } else {
-      Alert.alert("Notifikasi", "Belum ada notifikasi baru saat ini.");
-    }
   };
 
   const handleTabPress = (
     tab: "beranda" | "layanan" | "komunitas" | "profil",
   ) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    setActiveTab(tab);
     if (onNavigateToTab) {
       onNavigateToTab(tab);
-    }
-  };
-
-  const handleCategoryPress = (categoryName: string) => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    if (categoryName === "Layanan Darurat" && onOpenEmergency) {
-      onOpenEmergency();
-    } else if (categoryName === "Transportasi" && onOpenTransportService) {
-      onOpenTransportService();
-    } else {
-      Alert.alert("Layanan", `Menampilkan fasilitas ${categoryName} terdekat.`);
     }
   };
 
@@ -92,7 +77,7 @@ export default function ServicesScreen({
 
   const handleOpenMap = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    Alert.alert("Buka Peta", "Membuka peta lokasi layanan publik terdekat.");
+    Alert.alert("Buka Peta", "Membuka peta lokasi transportasi terdekat.");
   };
 
   return (
@@ -103,41 +88,29 @@ export default function ServicesScreen({
     >
       <SafeAreaView style={styles.safeArea} edges={["top", "left", "right"]}>
         <View style={styles.container}>
+          {/* Header Bar with Back Button */}
+          <View style={styles.navHeader}>
+            <TouchableOpacity
+              style={styles.backButton}
+              activeOpacity={0.7}
+              onPress={handleBackPress}
+            >
+              <Ionicons
+                name="chevron-back"
+                size={22}
+                color={Palette.text.active}
+              />
+            </TouchableOpacity>
+
+            <ThemedText style={styles.screenTitle}>Transportasi</ThemedText>
+
+            <View style={styles.headerSpacer} />
+          </View>
+
           <ScrollView
             contentContainerStyle={styles.scrollContent}
             showsVerticalScrollIndicator={false}
           >
-            {/* Header: Location & Notification Bell */}
-            <View style={styles.topHeader}>
-              <View style={styles.locationContainer}>
-                <Image
-                  source={require("@/assets/icons/ic-homepage-current-location.png")}
-                  style={styles.locationIconAsset}
-                  resizeMode="contain"
-                />
-                <View>
-                  <ThemedText style={styles.locationSubLabel}>
-                    Lokasi kamu, saat ini
-                  </ThemedText>
-                  <ThemedText style={styles.locationMainLabel}>
-                    Jakarta Selatan
-                  </ThemedText>
-                </View>
-              </View>
-
-              <TouchableOpacity
-                style={styles.notificationButton}
-                activeOpacity={0.8}
-                onPress={handleNotificationPress}
-              >
-                <Image
-                  source={require("@/assets/icons/ic-homepage-notification.png")}
-                  style={styles.notifIconAsset}
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
-            </View>
-
             {/* Service Search Hero Card */}
             <View style={styles.heroCard}>
               {/* AI Prompt Box */}
@@ -186,123 +159,6 @@ export default function ServicesScreen({
                   />
                 </TouchableOpacity>
               </View>
-
-              {/* 6 Category Services Grid (2 Rows x 3 Items) */}
-              <View style={styles.categoriesGrid}>
-                {/* Row 1 */}
-                <View style={styles.categoryRow}>
-                  {/* Category 1: Transportasi */}
-                  <TouchableOpacity
-                    style={styles.categoryCard}
-                    activeOpacity={0.8}
-                    onPress={() => handleCategoryPress("Transportasi")}
-                  >
-                    <View style={styles.categoryIconCircle}>
-                      <Image
-                        source={require("@/assets/icons/ic-service-transportation.png")}
-                        style={styles.categoryIconAsset}
-                        resizeMode="contain"
-                      />
-                    </View>
-                    <ThemedText style={styles.categoryLabel}>
-                      Transportasi
-                    </ThemedText>
-                  </TouchableOpacity>
-
-                  {/* Category 2: Rumah Sakit */}
-                  <TouchableOpacity
-                    style={styles.categoryCard}
-                    activeOpacity={0.8}
-                    onPress={() => handleCategoryPress("Rumah Sakit")}
-                  >
-                    <View style={styles.categoryIconCircle}>
-                      <Image
-                        source={require("@/assets/icons/ic-service-hospital.png")}
-                        style={styles.categoryIconAsset}
-                        resizeMode="contain"
-                      />
-                    </View>
-                    <ThemedText style={styles.categoryLabel}>
-                      Rumah Sakit
-                    </ThemedText>
-                  </TouchableOpacity>
-
-                  {/* Category 3: Akses & Fasilitas */}
-                  <TouchableOpacity
-                    style={styles.categoryCard}
-                    activeOpacity={0.8}
-                    onPress={() => handleCategoryPress("Akses & Fasilitas")}
-                  >
-                    <View style={styles.categoryIconCircle}>
-                      <Image
-                        source={require("@/assets/icons/ic-service-facility.png")}
-                        style={styles.categoryIconAsset}
-                        resizeMode="contain"
-                      />
-                    </View>
-                    <ThemedText style={styles.categoryLabel}>
-                      Akses & Fasilitas
-                    </ThemedText>
-                  </TouchableOpacity>
-                </View>
-
-                {/* Row 2 */}
-                <View style={styles.categoryRow}>
-                  {/* Category 4: Layanan Darurat */}
-                  <TouchableOpacity
-                    style={styles.categoryCard}
-                    activeOpacity={0.8}
-                    onPress={() => handleCategoryPress("Layanan Darurat")}
-                  >
-                    <View style={styles.categoryIconCircle}>
-                      <Image
-                        source={require("@/assets/icons/ic-service-emergency.png")}
-                        style={styles.categoryIconAsset}
-                        resizeMode="contain"
-                      />
-                    </View>
-                    <ThemedText style={styles.categoryLabel}>
-                      Layanan Darurat
-                    </ThemedText>
-                  </TouchableOpacity>
-
-                  {/* Category 5: Penginapan */}
-                  <TouchableOpacity
-                    style={styles.categoryCard}
-                    activeOpacity={0.8}
-                    onPress={() => handleCategoryPress("Penginapan")}
-                  >
-                    <View style={styles.categoryIconCircle}>
-                      <Image
-                        source={require("@/assets/icons/ic-service-housing.png")}
-                        style={styles.categoryIconAsset}
-                        resizeMode="contain"
-                      />
-                    </View>
-                    <ThemedText style={styles.categoryLabel}>
-                      Penginapan
-                    </ThemedText>
-                  </TouchableOpacity>
-
-                  {/* Category 6: Kebutuhan Harian */}
-                  <TouchableOpacity
-                    style={styles.categoryCard}
-                    activeOpacity={0.8}
-                    onPress={() => handleCategoryPress("Kebutuhan Harian")}
-                  >
-                    <View style={styles.categoryIconCircle}>
-                      <Image
-                        source={require("@/assets/icons/ic-service-daily-needs.png")}
-                        style={styles.categoryIconAsset}
-                        resizeMode="contain"
-                      />
-                    </View>
-                    <ThemedText style={styles.categoryLabel}>
-                      Kebutuhan Harian
-                    </ThemedText>
-                  </TouchableOpacity>
-                </View>
-              </View>
             </View>
 
             {/* Section 1: Layanan Terdekat */}
@@ -316,7 +172,7 @@ export default function ServicesScreen({
                 onPress={() =>
                   Alert.alert(
                     "Semua Layanan",
-                    "Menampilkan daftar semua layanan terdekat.",
+                    "Menampilkan daftar semua transportasi terdekat.",
                   )
                 }
               >
@@ -422,54 +278,221 @@ export default function ServicesScreen({
                   </ThemedText>
                 </View>
               </TouchableOpacity>
+            </ScrollView>
 
-              {/* Card 3: RSUP Fatmawati */}
+            {/* Section 2: Tempat Lain */}
+            <View style={styles.sectionHeader}>
+              <ThemedText style={styles.sectionTitle}>Tempat Lain</ThemedText>
               <TouchableOpacity
-                style={styles.nearbyCard}
+                style={styles.seeAllRow}
+                activeOpacity={0.7}
+                onPress={() =>
+                  Alert.alert(
+                    "Tempat Lain",
+                    "Menampilkan daftar opsi transportasi lainnya.",
+                  )
+                }
+              >
+                <ThemedText style={styles.sectionSeeAll}>
+                  Lihat Semua
+                </ThemedText>
+                <Ionicons
+                  name="chevron-forward"
+                  size={14}
+                  color={Palette.blue[600]}
+                />
+              </TouchableOpacity>
+            </View>
+
+            {/* Vertical List of 4 Transport Cards */}
+            <View style={styles.verticalListContainer}>
+              {/* Item 1: Stasiun MRT Blok M BCA */}
+              <TouchableOpacity
+                style={styles.listCard}
                 activeOpacity={0.9}
                 onPress={handleOpenMap}
               >
-                <View style={styles.cardImageWrapper}>
+                <View style={styles.listImageWrapper}>
                   <Image
-                    source={require("@/assets/images/img-hospital.png")}
-                    style={styles.cardImage}
+                    source={require("@/assets/images/img-service-blokm.png")}
+                    style={styles.listImage}
                     resizeMode="cover"
                   />
-                  <View style={styles.imageOverlayBadge}>
+                  <View style={styles.listImageOverlayBadge}>
                     <Image
-                      source={require("@/assets/icons/ic-homepage-hospital.png")}
-                      style={styles.categoryIconAsset}
+                      source={require("@/assets/icons/ic-homepage-train-station.png")}
+                      style={styles.categoryIconAsset2}
                       resizeMode="contain"
                     />
                     <ThemedText style={styles.badgeText}>
-                      RSUP Fatmawati
+                      Stasiun Kereta
                     </ThemedText>
                   </View>
                 </View>
 
-                <View style={styles.cardInfoPadding}>
+                <View style={styles.listCardContent}>
                   <View style={styles.tagsRow}>
                     <View style={styles.tagPill}>
                       <ThemedText style={styles.tagText}>
-                        Jarak 1.1 km
+                        Jarak 1.2 km
                       </ThemedText>
                     </View>
                     <View style={styles.tagPill}>
-                      <ThemedText style={styles.tagText}>IGD 24 jam</ThemedText>
+                      <ThemedText style={styles.tagText}>Akses Lift</ThemedText>
                     </View>
                   </View>
 
-                  <ThemedText style={styles.cardTitle}>
-                    RSUP Fatmawati
+                  <ThemedText style={styles.listCardTitle}>
+                    Stasiun MRT Blok M BCA
                   </ThemedText>
-                  <ThemedText style={styles.cardDesc} numberOfLines={2}>
-                    Rumah sakit rujukan ramah difabel dan IGD 24 jam.
+                  <ThemedText style={styles.listCardDesc} numberOfLines={2}>
+                    Akses lift, jalur pemandu, dan petugas bantuan tersedia.
                   </ThemedText>
                 </View>
               </TouchableOpacity>
-            </ScrollView>
 
-            {/* Section 2: Lihat di Maps */}
+              {/* Item 2: Stasiun MRT Lebak Bulus Grab */}
+              <TouchableOpacity
+                style={styles.listCard}
+                activeOpacity={0.9}
+                onPress={handleOpenMap}
+              >
+                <View style={styles.listImageWrapper}>
+                  <Image
+                    source={require("@/assets/images/img-service-lebakbulus.png")}
+                    style={styles.listImage}
+                    resizeMode="cover"
+                  />
+                  <View style={styles.listImageOverlayBadge}>
+                    <Image
+                      source={require("@/assets/icons/ic-homepage-train-station.png")}
+                      style={styles.categoryIconAsset2}
+                      resizeMode="contain"
+                    />
+                    <ThemedText style={styles.badgeText}>
+                      Stasiun Kereta
+                    </ThemedText>
+                  </View>
+                </View>
+
+                <View style={styles.listCardContent}>
+                  <View style={styles.tagsRow}>
+                    <View style={styles.tagPill}>
+                      <ThemedText style={styles.tagText}>
+                        Jarak 2.6 km
+                      </ThemedText>
+                    </View>
+                    <View style={styles.tagPill}>
+                      <ThemedText style={styles.tagText}>
+                        Drop-Off Luas
+                      </ThemedText>
+                    </View>
+                  </View>
+
+                  <ThemedText style={styles.listCardTitle}>
+                    Stasiun MRT Lebak Bulus Grab
+                  </ThemedText>
+                  <ThemedText style={styles.listCardDesc} numberOfLines={2}>
+                    Stasiun MRT dengan area drop off luas dan akses ramah
+                    difabel.
+                  </ThemedText>
+                </View>
+              </TouchableOpacity>
+
+              {/* Item 3: Terminal Blok M */}
+              <TouchableOpacity
+                style={styles.listCard}
+                activeOpacity={0.9}
+                onPress={handleOpenMap}
+              >
+                <View style={styles.listImageWrapper}>
+                  <Image
+                    source={require("@/assets/images/img-service-terminal-blokm.png")}
+                    style={styles.listImage}
+                    resizeMode="cover"
+                  />
+                  <View style={styles.listImageOverlayBadge}>
+                    <Image
+                      source={require("@/assets/icons/ic-homepage-bus-stop.png")}
+                      style={styles.categoryIconAsset2}
+                      resizeMode="contain"
+                    />
+                    <ThemedText style={styles.badgeText}>Halte Bus</ThemedText>
+                  </View>
+                </View>
+
+                <View style={styles.listCardContent}>
+                  <View style={styles.tagsRow}>
+                    <View style={styles.tagPill}>
+                      <ThemedText style={styles.tagText}>
+                        Jarak 3.0 km
+                      </ThemedText>
+                    </View>
+                    <View style={styles.tagPill}>
+                      <ThemedText style={styles.tagText}>Kursi Roda</ThemedText>
+                    </View>
+                  </View>
+
+                  <ThemedText style={styles.listCardTitle}>
+                    Terminal Blok M
+                  </ThemedText>
+                  <ThemedText style={styles.listCardDesc} numberOfLines={2}>
+                    Terminal bus kota dengan akses kursi roda dan rute ke
+                    berbagai wilayah.
+                  </ThemedText>
+                </View>
+              </TouchableOpacity>
+
+              {/* Item 4: Stasiun KRL Sudirman */}
+              <TouchableOpacity
+                style={styles.listCard}
+                activeOpacity={0.9}
+                onPress={handleOpenMap}
+              >
+                <View style={styles.listImageWrapper}>
+                  <Image
+                    source={require("@/assets/images/img-service-krl-sudirman.png")}
+                    style={styles.listImage}
+                    resizeMode="cover"
+                  />
+                  <View style={styles.listImageOverlayBadge}>
+                    <Image
+                      source={require("@/assets/icons/ic-homepage-train-station.png")}
+                      style={styles.categoryIconAsset2}
+                      resizeMode="contain"
+                    />
+                    <ThemedText style={styles.badgeText}>
+                      Stasiun Kereta
+                    </ThemedText>
+                  </View>
+                </View>
+
+                <View style={styles.listCardContent}>
+                  <View style={styles.tagsRow}>
+                    <View style={styles.tagPill}>
+                      <ThemedText style={styles.tagText}>
+                        Jarak 6.5 km
+                      </ThemedText>
+                    </View>
+                    <View style={styles.tagPill}>
+                      <ThemedText style={styles.tagText}>
+                        Akses Prioritas
+                      </ThemedText>
+                    </View>
+                  </View>
+
+                  <ThemedText style={styles.listCardTitle}>
+                    Stasiun KRL Sudirman
+                  </ThemedText>
+                  <ThemedText style={styles.listCardDesc} numberOfLines={2}>
+                    Stasiun transit besar dengan akses prioritas dan koneksi
+                    antar moda.
+                  </ThemedText>
+                </View>
+              </TouchableOpacity>
+            </View>
+
+            {/* Section 3: Lihat di Maps */}
             <View style={styles.sectionHeader}>
               <ThemedText style={styles.sectionTitle}>Lihat di Maps</ThemedText>
             </View>
@@ -579,7 +602,7 @@ export default function ServicesScreen({
   );
 }
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   bgImage: {
     flex: 1,
     width: "100%",
@@ -591,58 +614,42 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  scrollContent: {
-    paddingHorizontal: 20,
-    paddingTop: 8,
-    paddingBottom: 90,
-  },
-
-  /* Top Header: Location & Notif Bell */
-  topHeader: {
+  navHeader: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingTop: 12,
-    paddingBottom: 16,
+    paddingHorizontal: 20,
+    paddingTop: 8,
+    paddingBottom: 14,
   },
-  locationContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-  },
-  locationIconAsset: {
-    width: 44,
-    height: 44,
-  },
-  locationSubLabel: {
-    fontFamily: Fonts.regular,
-    fontSize: 12,
-    color: Palette.text.inactive,
-  },
-  locationMainLabel: {
+  screenTitle: {
     fontFamily: Fonts.bold,
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "700",
     color: Palette.text.active,
   },
-  notificationButton: {
+  backButton: {
     width: 44,
     height: 44,
+    borderRadius: 22,
+    backgroundColor: "#FFFFFF",
+    borderWidth: 1,
+    borderColor: "#EDF3FD",
     alignItems: "center",
     justifyContent: "center",
+    shadowColor: Palette.blue[900],
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 6,
+    elevation: 2,
   },
-  notifIconAsset: {
+  headerSpacer: {
     width: 44,
-    height: 44,
   },
-  notifBadgeDot: {
-    position: "absolute",
-    top: 10,
-    right: 11,
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: "#FF4D4D",
+  scrollContent: {
+    paddingHorizontal: 20,
+    paddingTop: 4,
+    paddingBottom: 90,
   },
 
   /* Service Hero Card */
@@ -731,45 +738,6 @@ export const styles = StyleSheet.create({
     height: 50,
   },
 
-  /* 6 Categories Grid */
-  categoriesGrid: {
-    gap: 12,
-  },
-  categoryRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    gap: 8,
-  },
-  categoryCard: {
-    flex: 1,
-    backgroundColor: "#FAFCFE",
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: "#EDF3FD",
-    paddingVertical: 12,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  categoryIconCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "rgba(85, 144, 255, 0.12)",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 6,
-  },
-  categoryIconAsset: {
-    width: 22,
-    height: 22,
-  },
-  categoryLabel: {
-    fontFamily: Fonts.medium,
-    fontSize: 11,
-    color: Palette.text.active,
-    textAlign: "center",
-  },
-
   /* Section Headers */
   sectionHeader: {
     flexDirection: "row",
@@ -835,10 +803,6 @@ export const styles = StyleSheet.create({
     paddingRight: 12,
     borderRadius: 20,
   },
-  badgeIconAsset: {
-    width: 20,
-    height: 20,
-  },
   badgeText: {
     fontFamily: Fonts.semiBold,
     fontSize: 11,
@@ -847,6 +811,14 @@ export const styles = StyleSheet.create({
   },
   cardInfoPadding: {
     padding: 12,
+  },
+  categoryIconAsset: {
+    width: 22,
+    height: 22,
+  },
+  categoryIconAsset2: {
+    width: 16,
+    height: 16,
   },
   tagsRow: {
     flexDirection: "row",
@@ -878,7 +850,67 @@ export const styles = StyleSheet.create({
     lineHeight: 15,
   },
 
-  /* Section 2: Map Card */
+  /* Section 2: Tempat Lain Vertical List */
+  verticalListContainer: {
+    gap: 12,
+    marginBottom: 16,
+  },
+  listCard: {
+    flexDirection: "row",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 18,
+    borderWidth: 1.2,
+    borderColor: "#E7EFFC",
+    padding: 10,
+    alignItems: "center",
+    shadowColor: Palette.blue[900],
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.03,
+    shadowRadius: 6,
+    elevation: 2,
+  },
+  listImageWrapper: {
+    width: 110,
+    height: 86,
+    borderRadius: 14,
+    overflow: "hidden",
+    position: "relative",
+  },
+  listImage: {
+    width: "100%",
+    height: "100%",
+  },
+  listImageOverlayBadge: {
+    position: "absolute",
+    top: 4,
+    left: 4,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    backgroundColor: "rgba(255, 255, 255, 0.92)",
+    paddingVertical: 2,
+    paddingHorizontal: 6,
+    borderRadius: 8,
+  },
+  listCardContent: {
+    flex: 1,
+    marginLeft: 12,
+  },
+  listCardTitle: {
+    fontFamily: Fonts.semiBold,
+    fontSize: 13,
+    fontWeight: "600",
+    color: Palette.text.active,
+    marginBottom: 3,
+  },
+  listCardDesc: {
+    fontFamily: Fonts.regular,
+    fontSize: 10.5,
+    color: Palette.text.inactive,
+    lineHeight: 14,
+  },
+
+  /* Section 3: Map Card */
   mapCardContainer: {
     backgroundColor: "#FFFFFF",
     borderRadius: 20,
