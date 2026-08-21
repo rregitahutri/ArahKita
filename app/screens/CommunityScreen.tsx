@@ -108,11 +108,10 @@ export default function CommunityScreen({
             {/* Top Search & Filter Bar */}
             <View style={styles.searchSection}>
               <View style={styles.searchBar}>
-                <Ionicons
-                  name="search"
-                  size={20}
-                  color={Palette.text.inactive}
-                  style={styles.searchIcon}
+                <Image
+                  source={require("@/assets/icons/ic-homepage-search.png")}
+                  style={styles.micIcon}
+                  resizeMode="contain"
                 />
                 <TextInput
                   style={styles.searchInput}
@@ -123,7 +122,7 @@ export default function CommunityScreen({
                 />
                 <TouchableOpacity onPress={handleMicSearch} activeOpacity={0.7}>
                   <Image
-                    source={require("@/assets/icons/ic-homepage-search.png")}
+                    source={require("@/assets/icons/ic-homepage-voice.png")}
                     style={styles.micIcon}
                     resizeMode="contain"
                   />
@@ -1189,71 +1188,82 @@ export default function CommunityScreen({
             </View>
           </ScrollView>
 
-          {/* Bottom Floating Navigation Bar */}
+          {/* Bottom Navigation Bar */}
           <View style={styles.bottomNavContainer}>
-            <TouchableOpacity
-              style={styles.navItem}
-              activeOpacity={0.7}
-              onPress={() => handleTabPress("beranda")}
-            >
-              <Image
-                source={require("@/assets/icons/ic-nav-home.png")}
-                style={styles.navIcon}
-                resizeMode="contain"
-              />
-              <ThemedText style={styles.navLabel}>Beranda</ThemedText>
-            </TouchableOpacity>
+            <View style={styles.bottomNavContent}>
+              {/* Tab 1: Beranda */}
+              <TouchableOpacity
+                style={styles.navItem}
+                activeOpacity={0.7}
+                onPress={() => handleTabPress("beranda")}
+              >
+                <Image
+                  source={require("@/assets/icons/ic-nav-home.png")}
+                  style={styles.navIconAsset}
+                  resizeMode="contain"
+                />
+                <ThemedText style={styles.navLabel}>Beranda</ThemedText>
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.navItem}
-              activeOpacity={0.7}
-              onPress={() => handleTabPress("layanan")}
-            >
-              <Image
-                source={require("@/assets/icons/ic-nav-layanan.png")}
-                style={styles.navIcon}
-                resizeMode="contain"
-              />
-              <ThemedText style={styles.navLabel}>Layanan</ThemedText>
-            </TouchableOpacity>
+              {/* Tab 2: Layanan */}
+              <TouchableOpacity
+                style={styles.navItem}
+                activeOpacity={0.7}
+                onPress={() => handleTabPress("layanan")}
+              >
+                <Image
+                  source={require("@/assets/icons/ic-nav-layanan.png")}
+                  style={styles.navIconAsset}
+                  resizeMode="contain"
+                />
+                <ThemedText style={styles.navLabel}>Layanan</ThemedText>
+              </TouchableOpacity>
 
-            {/* AI Assistant Center Sparkle Button */}
+              {/* Floating Center AI Button Spacer */}
+              <View style={styles.centerFloatingSpacer} />
+
+              {/* Tab 3: Komunitas (ACTIVE) */}
+              <TouchableOpacity
+                style={styles.navItem}
+                activeOpacity={0.7}
+                onPress={() => handleTabPress("komunitas")}
+              >
+                <Image
+                  source={require("@/assets/icons/ic-nav-komunitas-active.png")}
+                  style={styles.navIconAsset}
+                  resizeMode="contain"
+                />
+                <ThemedText style={[styles.navLabel, styles.navLabelActive]}>
+                  Komunitas
+                </ThemedText>
+              </TouchableOpacity>
+
+              {/* Tab 4: Profil */}
+              <TouchableOpacity
+                style={styles.navItem}
+                activeOpacity={0.7}
+                onPress={() => handleTabPress("profil")}
+              >
+                <Image
+                  source={require("@/assets/icons/ic-nav-profil.png")}
+                  style={styles.navIconAsset}
+                  resizeMode="contain"
+                />
+                <ThemedText style={styles.navLabel}>Profil</ThemedText>
+              </TouchableOpacity>
+            </View>
+
+            {/* Floating Sparkle AI Center Button Asset */}
             <TouchableOpacity
-              style={styles.aiSparkleContainer}
+              style={styles.floatingAiButton}
               activeOpacity={0.85}
               onPress={handleAiSparklePress}
             >
               <Image
                 source={require("@/assets/icons/ic-nav-ai.png")}
-                style={styles.aiSparkleImage}
+                style={styles.floatingAiAsset}
                 resizeMode="contain"
               />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.navItem}
-              activeOpacity={0.7}
-              onPress={() => handleTabPress("komunitas")}
-            >
-              <Image
-                source={require("@/assets/icons/ic-nav-komunitas-active.png")}
-                style={styles.navIconActive}
-                resizeMode="contain"
-              />
-              <ThemedText style={styles.navLabelActive}>Komunitas</ThemedText>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.navItem}
-              activeOpacity={0.7}
-              onPress={() => handleTabPress("profil")}
-            >
-              <Image
-                source={require("@/assets/icons/ic-nav-profil.png")}
-                style={styles.navIcon}
-                resizeMode="contain"
-              />
-              <ThemedText style={styles.navLabel}>Profil</ThemedText>
             </TouchableOpacity>
           </View>
         </View>
@@ -1308,9 +1318,8 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
   },
   micIcon: {
-    width: 22,
-    height: 22,
-    marginLeft: 8,
+    width: 34,
+    height: 34,
   },
 
   /* Category Filter Pills */
@@ -1363,7 +1372,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 16,
     marginBottom: 20,
-    borderWidth: 1,
+    borderWidth: 1.2,
     borderColor: "#EDF3FD",
     shadowColor: Palette.blue[900],
     shadowOffset: { width: 0, height: 4 },
@@ -1373,45 +1382,45 @@ const styles = StyleSheet.create({
   },
   aiHeroHeaderRow: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-start",
     marginBottom: 14,
     backgroundColor: "#F0F5FE",
     borderRadius: 16,
-    padding: 12,
+    height: 80,
   },
   aiMascotCircle: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
     backgroundColor: Palette.blue[100],
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 12,
+    borderRadius: 16,
+    flexDirection: "row",
+    alignItems: "flex-start",
+    marginBottom: 12,
+    height: 70,
   },
   aiMascotImg: {
-    width: 28,
-    height: 28,
+    width: 70,
+    height: 120,
   },
   aiHeroTextGroup: {
+    top: 16,
     flex: 1,
   },
   aiHeroTitle: {
-    fontFamily: Fonts.bold,
-    fontSize: 15,
-    fontWeight: "700",
+    fontFamily: Fonts.semiBold,
+    fontSize: 13,
+    fontWeight: "600",
     color: Palette.text.active,
-    marginBottom: 2,
+    lineHeight: 18,
   },
   aiHeroSubtitle: {
     fontFamily: Fonts.regular,
     fontSize: 11.5,
     color: Palette.text.inactive,
+    marginTop: 2,
     lineHeight: 15,
   },
   volumeButton: {
-    width: 26,
-    height: 26,
-    marginLeft: 6,
+    width: 50,
+    height: 100,
   },
   actionButtonsRow: {
     flexDirection: "row",
@@ -1775,36 +1784,35 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: "#FFFFFF",
+    height: 72,
+    alignItems: "center",
+    justifyContent: "flex-end",
+  },
+  bottomNavContent: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-around",
-    paddingVertical: 10,
-    paddingHorizontal: 8,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
+    backgroundColor: "#FFFFFF",
+    width: "100%",
+    height: 64,
+    borderTopWidth: 1,
+    borderTopColor: "#EDF3FD",
+    paddingHorizontal: 12,
     shadowColor: Palette.blue[900],
     shadowOffset: { width: 0, height: -4 },
-    shadowOpacity: 0.08,
+    shadowOpacity: 0.04,
     shadowRadius: 12,
-    elevation: 10,
+    elevation: 8,
   },
   navItem: {
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    flex: 1,
+    gap: 3,
   },
-  navIcon: {
-    width: 24,
-    height: 24,
-    tintColor: Palette.text.inactive,
-    marginBottom: 4,
-  },
-  navIconActive: {
-    width: 24,
-    height: 24,
-    tintColor: Palette.blue[600],
-    marginBottom: 4,
+  navIconAsset: {
+    width: 22,
+    height: 22,
   },
   navLabel: {
     fontFamily: Fonts.medium,
@@ -1812,22 +1820,23 @@ const styles = StyleSheet.create({
     color: Palette.text.inactive,
   },
   navLabelActive: {
+    color: Palette.blue[500],
     fontFamily: Fonts.semiBold,
-    fontSize: 11,
-    fontWeight: "600",
-    color: Palette.blue[600],
   },
-  aiSparkleContainer: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: "transparent",
+  centerFloatingSpacer: {
+    width: 60,
+  },
+  floatingAiButton: {
+    position: "absolute",
+    top: -20,
+    width: 100,
+    height: 60,
+    borderRadius: 30,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: -24,
   },
-  aiSparkleImage: {
-    width: 56,
-    height: 56,
+  floatingAiAsset: {
+    width: 75,
+    height: 75,
   },
 });

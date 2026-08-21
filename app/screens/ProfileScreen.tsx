@@ -746,15 +746,15 @@ const styles = StyleSheet.create({
   },
   floatingAiButton: {
     position: "absolute",
-    top: 0,
-    width: 60,
+    top: -20,
+    width: 100,
     height: 60,
     borderRadius: 30,
     alignItems: "center",
     justifyContent: "center",
   },
   floatingAiAsset: {
-    width: 60,
-    height: 60,
+    width: 75,
+    height: 75,
   },
 });
